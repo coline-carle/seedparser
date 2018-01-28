@@ -1,10 +1,10 @@
-defmodule Seedelixir.MixProject do
+defmodule Seedparser.MixProject do
   @moduledoc false
   use Mix.Project
 
   def project do
     [
-      app: :seedelixir,
+      app: :seedparser,
       version: "0.0.1",
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
