@@ -7,20 +7,22 @@ defmodule SeedparserDecoderTest do
 
   test "parse title" do
     informations = %{:title => "title"}
-    assert Decoder.decode("<title>") == {:ok, informations}
-    assert Decoder.decode("[title]") == {:ok, informations}
-    assert Decoder.decode("  [title]") == {:ok, informations}
+    assert Decoder.decode("<title>", transform: false) == {:ok, informations}
+    assert Decoder.decode("[title]", tranform: false) == {:ok, informations}
+    assert Decoder.decode("  [title]", transform: false) == {:ok, informations}
   end
 
   test "parse keyvalues" do
     informations = %{:title => "title", "key" => "value"}
-    assert Decoder.decode("<title>\n[key](value)") == {:ok, informations}
-    assert Decoder.decode("```md\n<title>\n--\n* [key](value)") == {:ok, informations}
+    assert Decoder.decode("<title>\n[key](value)", transform: false) == {:ok, informations}
+
+    assert Decoder.decode("```md\n<title>\n--\n* [key](value)", transform: false) ==
+             {:ok, informations}
   end
 
   test "normalize keys" do
     informations = %{:title => "title", :seeds => %{quantity: 600}}
-    assert Decoder.decode("<title>\n[SEEDS:](600)") == {:ok, informations}
+    assert Decoder.decode("<title>\n[SEEDS:](600)", transform: false) == {:ok, informations}
   end
 
   test "thalipedes template" do
@@ -36,7 +38,7 @@ defmodule SeedparserDecoderTest do
       :participants => %{count: 6, max: 10}
     }
 
-    assert Decoder.decode(text) == {:ok, informations}
+    assert Decoder.decode(text, transform: false) == {:ok, informations}
   end
 
   test "sholenar template" do
@@ -53,6 +55,6 @@ defmodule SeedparserDecoderTest do
       :participants => %{count: 10, max: 10}
     }
 
-    assert Decoder.decode(text) == {:ok, informations}
+    assert Decoder.decode(text, transform: false) == {:ok, informations}
   end
 end

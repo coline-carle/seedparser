@@ -23,6 +23,7 @@ defmodule Seedparser.Decoder do
   @moduledoc false
 
   alias Seedparser.DecodeError
+  alias Seedparser.SeedRaid
   alias Seedparser.Normalizer
   alias Seedparser.Element.{Style, Date, Max, Participants, Required, Seeds, Time, TypeToken}
 
@@ -35,6 +36,7 @@ defmodule Seedparser.Decoder do
 
   # @letters 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
   @digits '01234556789'
+  @default_options [transform: true]
 
   def decode_title([]), do: :empty
 
@@ -79,7 +81,7 @@ defmodule Seedparser.Decoder do
     end
   end
 
-  def decode(data) do
+  def decode(data, options \\ @default_options) do
     lines = data |> String.split("\n")
 
     try do
@@ -92,7 +94,13 @@ defmodule Seedparser.Decoder do
         {:error, :empty}
 
       value ->
-        {:ok, value}
+        case options |> Keyword.fetch(:transform) do
+          {:ok, true} ->
+            {:ok, value |> SeedRaid.transform()}
+
+          _ ->
+            {:ok, value}
+        end
     end
   end
 

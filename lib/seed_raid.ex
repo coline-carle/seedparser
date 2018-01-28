@@ -36,7 +36,19 @@ defmodule Seedparser.SeedRaid do
           | :fjarnskaggl
           | :dreamleaf
 
+  @required_keys [:title, :date, :time]
+
   def transform(informations) do
+    case @required_keys
+         |> Enum.all?(fn key ->
+           informations |> Map.has_key?(key)
+         end) do
+      true -> do_transform(informations)
+      _ -> :error
+    end
+  end
+
+  defp do_transform(informations) do
     acc = []
     acc = [informations |> transform_title() | acc]
     acc = [informations |> transform_datetime() | acc]
