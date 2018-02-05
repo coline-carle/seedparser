@@ -10,11 +10,11 @@ use Mix.Config
 
 # You can configure your application as:
 #
-#     config :seedparser, key: :value
+#     config :seed_parser, key: :value
 #
 # and access this configuration in your application as:
 #
-#     Application.get_env(:seedparser, :key)
+#     Application.get_env(:seed_parser, :key)
 #
 # You can also configure a 3rd-party app:
 #

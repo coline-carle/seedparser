@@ -1,7 +1,7 @@
-defmodule Seedparser.Element.Style do
+defmodule SeedParser.Element.Style do
   @moduledoc false
 
-  alias Seedparser.Normalizer
+  alias SeedParser.Normalizer
 
   @values %{
     "2-Phase" => :two_phase

@@ -1,9 +1,9 @@
-defmodule SeedparserElementTimeTest do
+defmodule SeedParserElementTimeTest do
   @moduledoc false
 
   use ExUnit.Case, async: true
-  # doctest Seedparser.Element.Seeds
-  alias Seedparser.Element.Time
+  # doctest SeedParser.Element.Seeds
+  alias SeedParser.Element.Time
 
   test "parse time" do
     time = %{:hour => 22, :minute => 00}

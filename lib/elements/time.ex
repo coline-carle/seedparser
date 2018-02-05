@@ -1,11 +1,11 @@
-defmodule Seedparser.Element.Time do
+defmodule SeedParser.Element.Time do
   @moduledoc false
 
   @digits '01234556789'
   @hour 0
   @minute 1
 
-  alias Seedparser.DecodeError
+  alias SeedParser.DecodeError
 
   def decode(data) do
     try do

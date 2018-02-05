@@ -1,9 +1,9 @@
-defmodule SeedparserElementRequiredTest do
+defmodule SeedParserElementRequiredTest do
   @moduledoc false
 
   use ExUnit.Case, async: true
-  doctest Seedparser.Element.Required
-  alias Seedparser.Element.Required
+  doctest SeedParser.Element.Required
+  alias SeedParser.Element.Required
 
   test "parse participants" do
     required = %{:aethril => 3, :felwort => 3}

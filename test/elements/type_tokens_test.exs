@@ -1,9 +1,9 @@
-defmodule SeedparserElementTypeTokenTest do
+defmodule SeedParserElementTypeTokenTest do
   @moduledoc false
 
   use ExUnit.Case, async: true
-  doctest Seedparser.Element.TypeToken
-  alias Seedparser.Element.TypeToken
+  doctest SeedParser.Element.TypeToken
+  alias SeedParser.Element.TypeToken
 
   test "pars tokens" do
     tokens = [:starlight_rose]

@@ -1,9 +1,9 @@
-defmodule SeedparserSeedRaidTest do
+defmodule SeedParserSeedRaidTest do
   @moduledoc false
 
   use ExUnit.Case, async: true
-  doctest Seedparser.SeedRaid
-  alias Seedparser.SeedRaid
+  doctest SeedParser.SeedRaid
+  alias SeedParser.SeedRaid
 
   test "parse mix" do
     informations = %{

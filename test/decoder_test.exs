@@ -1,9 +1,9 @@
-defmodule SeedparserDecoderTest do
+defmodule SeedParserDecoderTest do
   @moduledoc false
 
   use ExUnit.Case, async: true
-  doctest Seedparser.Decoder
-  alias Seedparser.Decoder
+  doctest SeedParser.Decoder
+  alias SeedParser.Decoder
 
   test "parse title" do
     informations = %{:title => "title"}

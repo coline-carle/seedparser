@@ -1,10 +1,10 @@
-defmodule Seedparser.Element.Seeds do
+defmodule SeedParser.Element.Seeds do
   @moduledoc false
 
   @digits '01234556789'
   @seeds_quantity 0
 
-  alias Seedparser.DecodeError
+  alias SeedParser.DecodeError
 
   def decode(data) do
     try do

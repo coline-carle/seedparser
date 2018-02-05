@@ -1,4 +1,4 @@
-defmodule Seedparser.DecodeError do
+defmodule SeedParser.DecodeError do
   @type t :: %__MODULE__{position: integer, data: String.t()}
 
   defexception [:position, :data]
@@ -19,13 +19,13 @@ defmodule Seedparser.DecodeError do
   end
 end
 
-defmodule Seedparser.Decoder do
+defmodule SeedParser.Decoder do
   @moduledoc false
 
-  alias Seedparser.DecodeError
-  alias Seedparser.SeedRaid
-  alias Seedparser.Normalizer
-  alias Seedparser.Element.{Style, Date, Max, Participants, Required, Seeds, Time, TypeToken}
+  alias SeedParser.DecodeError
+  alias SeedParser.SeedRaid
+  alias SeedParser.Normalizer
+  alias SeedParser.Element.{Style, Date, Max, Participants, Required, Seeds, Time, TypeToken}
 
   # We use integers instead of atoms to take advantage of the jump table
   # optimization

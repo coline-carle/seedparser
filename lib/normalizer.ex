@@ -1,4 +1,4 @@
-defmodule Seedparser.Normalizer do
+defmodule SeedParser.Normalizer do
   @moduledoc false
 
   @keys %{

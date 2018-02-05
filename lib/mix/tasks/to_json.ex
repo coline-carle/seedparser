@@ -3,7 +3,7 @@ defmodule Mix.Tasks.Template.ToJson do
 
   use Mix.Task
 
-  alias Seedparser.Decoder
+  alias SeedParser.Decoder
   alias Poison.Encoder
 
   def run(filename) do

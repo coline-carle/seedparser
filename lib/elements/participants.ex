@@ -1,11 +1,11 @@
-defmodule Seedparser.Element.Participants do
+defmodule SeedParser.Element.Participants do
   @moduledoc false
 
   @digits '01234556789'
   @participants 0
   @participants_max 1
 
-  alias Seedparser.DecodeError
+  alias SeedParser.DecodeError
 
   def decode(data) do
     try do

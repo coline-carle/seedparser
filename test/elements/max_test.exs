@@ -1,9 +1,9 @@
-defmodule SeedparserElementMaxTest do
+defmodule SeedParserElementMaxTest do
   @moduledoc false
 
   use ExUnit.Case, async: true
-  doctest Seedparser.Element.Max
-  alias Seedparser.Element.Max
+  doctest SeedParser.Element.Max
+  alias SeedParser.Element.Max
 
   test "parse participants" do
     max = %{:aethril => 15}

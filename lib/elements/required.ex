@@ -1,4 +1,4 @@
-defmodule Seedparser.Element.Required do
+defmodule SeedParser.Element.Required do
   @moduledoc false
 
   @digits '01234556789'
@@ -6,8 +6,8 @@ defmodule Seedparser.Element.Required do
   @rank 0
   @seed 1
 
-  alias Seedparser.DecodeError
-  alias Seedparser.Normalizer
+  alias SeedParser.DecodeError
+  alias SeedParser.Normalizer
   require Logger
 
   def decode(data) do

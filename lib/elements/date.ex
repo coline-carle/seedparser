@@ -1,4 +1,4 @@
-defmodule Seedparser.Element.Date do
+defmodule SeedParser.Element.Date do
   @moduledoc false
 
   @digits '01234556789'
@@ -8,7 +8,7 @@ defmodule Seedparser.Element.Date do
   @numdate [:month, :year]
   @litteraldate [:day]
 
-  alias Seedparser.DecodeError
+  alias SeedParser.DecodeError
   require Logger
 
   @tokens %{

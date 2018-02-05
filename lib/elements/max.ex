@@ -1,4 +1,4 @@
-defmodule Seedparser.Element.Max do
+defmodule SeedParser.Element.Max do
   @moduledoc false
 
   @digits '01234556789'
@@ -6,9 +6,9 @@ defmodule Seedparser.Element.Max do
   @quantity 0
   @seed 1
 
-  alias Seedparser.DecodeError
-  alias Seedparser.Normalizer
-  alias Seedparser.Element.TypeToken
+  alias SeedParser.DecodeError
+  alias SeedParser.Normalizer
+  alias SeedParser.Element.TypeToken
 
   def decode(data) do
     try do

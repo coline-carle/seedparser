@@ -1,8 +1,8 @@
-defmodule Seedparser.Element.TypeToken do
+defmodule SeedParser.Element.TypeToken do
   @moduledoc false
   require Logger
 
-  alias Seedparser.DecodeError
+  alias SeedParser.DecodeError
 
   @text 1
 

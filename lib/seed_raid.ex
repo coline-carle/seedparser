@@ -1,4 +1,4 @@
-defmodule Seedparser.SeedRaid do
+defmodule SeedParser.SeedRaid do
   @moduledoc """
     final representation of a seedraid
   """

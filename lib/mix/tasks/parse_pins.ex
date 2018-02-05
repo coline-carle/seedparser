@@ -4,7 +4,7 @@ defmodule Mix.Tasks.Discord.ParsePins do
   alias Nostrum.Api
   require Logger
   alias Poison.Encoder
-  alias Seedparser.Decoder
+  alias SeedParser.Decoder
 
   def parse_pin(message) do
     File.write("pins/#{message.id}.original", message.content)

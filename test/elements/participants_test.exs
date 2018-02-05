@@ -1,9 +1,9 @@
-defmodule SeedparserElementParticipantsTest do
+defmodule SeedParserElementParticipantsTest do
   @moduledoc false
 
   use ExUnit.Case, async: true
-  doctest Seedparser.Element.Participants
-  alias Seedparser.Element.Participants
+  doctest SeedParser.Element.Participants
+  alias SeedParser.Element.Participants
 
   test "parse participants" do
     participants = %{max: 10, count: 2}
