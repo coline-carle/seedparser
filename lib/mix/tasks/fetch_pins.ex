@@ -8,10 +8,10 @@ defmodule Mix.Tasks.Discord.FetchPins do
     File.write("pins/#{message.id}.original", message.content)
   end
 
-  defp ok({:ok, _}), do: true
-  defp ok(_), do: false
+  def run(channel_id) do
+    [:nostrum]
+    |> Enum.each(&Application.ensure_all_started/1)
 
-  def get(channel_id) do
     pinned = Api.get_pinned_messages!(channel_id)
 
     pinned

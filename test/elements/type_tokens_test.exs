@@ -5,7 +5,7 @@ defmodule SeedParserElementTypeTokenTest do
   doctest SeedParser.Element.TypeToken
   alias SeedParser.Element.TypeToken
 
-  test "pars tokens" do
+  test "parse tokens" do
     tokens = [:starlight_rose]
     assert TypeToken.decode("ONLY SLR") == {:ok, tokens}
   end

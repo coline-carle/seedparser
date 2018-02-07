@@ -40,7 +40,7 @@ defmodule SeedParser.Element.Seeds do
   end
 
   defp seeds_value(_rest, _original, _skip, _stack, value) do
-    [{:quantity, value}]
+    value
   end
 
   defp continue(rest, original, skip, stack, value) do

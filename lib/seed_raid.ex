@@ -2,17 +2,13 @@ defmodule SeedParser.SeedRaid do
   @moduledoc """
     final representation of a seedraid
   """
-  defstruct [:title, :datetime, :participants, :requirements, :type, :size, :style, :max]
+  defstruct [:datetime, :type, :size, :content]
 
   @type t :: %__MODULE__{
-          title: String.t(),
           datetime: Datetime.t(),
-          participants: integer,
           size: integer,
           type: raid_type,
-          max: list({herb | :any, integer}),
-          requirements: list({herb, rank}),
-          style: style | nil
+          content: String.t()
         }
 
   @type raid_type ::
@@ -24,10 +20,6 @@ defmodule SeedParser.SeedRaid do
   @type date :: {Calendar.year(), Calendar.month(), Calendar.day()}
   @type time :: {Calendar.hour(), Calendar.minute(), Calendar.second()}
 
-  @type rank :: integer
-
-  @type style :: :two_phase | :wild
-
   @type herb ::
           :starlight_rose
           | :foxflower
@@ -36,7 +28,7 @@ defmodule SeedParser.SeedRaid do
           | :fjarnskaggl
           | :dreamleaf
 
-  @required_keys [:title, :date, :time]
+  @required_keys [:date, :time]
 
   def transform(informations) do
     case @required_keys
@@ -50,47 +42,10 @@ defmodule SeedParser.SeedRaid do
 
   defp do_transform(informations) do
     acc = []
-    acc = [informations |> transform_title() | acc]
     acc = [informations |> transform_datetime() | acc]
     acc = [informations |> transform_type() | acc]
     acc = [informations |> transform_size() | acc]
-    acc = [informations |> transform_style() | acc]
-    acc = [informations |> transform_requirements() | acc]
-    acc = [informations |> transform_max() | acc]
-    acc = [informations |> transform_participants() | acc]
     struct(__MODULE__, acc)
-  end
-
-  defp transform_title(%{title: title}) do
-    {:title, title}
-  end
-
-  defp transform_max(%{max: max}) do
-    {:max, max |> Map.to_list()}
-  end
-
-  defp transform_max(_) do
-    {:max, nil}
-  end
-
-  defp transform_requirements(%{required: requirements}) do
-    {:requirements, requirements |> Map.to_list()}
-  end
-
-  defp transform_participants(%{participants: %{count: count}}) do
-    {:participants, count}
-  end
-
-  defp transform_participants(_) do
-    {:participants, 0}
-  end
-
-  defp transform_style(%{style: style}) do
-    {:style, style}
-  end
-
-  defp transform_style(_) do
-    {:style, nil}
   end
 
   defp transform_type(%{title_tokens: [token | []]}) do

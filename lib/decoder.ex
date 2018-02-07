@@ -25,7 +25,7 @@ defmodule SeedParser.Decoder do
   alias SeedParser.DecodeError
   alias SeedParser.SeedRaid
   alias SeedParser.Normalizer
-  alias SeedParser.Element.{Style, Date, Max, Participants, Required, Seeds, Time, TypeToken}
+  alias SeedParser.Element.{Date, Seeds, Time, TypeToken}
 
   # We use integers instead of atoms to take advantage of the jump table
   # optimization
@@ -48,36 +48,43 @@ defmodule SeedParser.Decoder do
       {:title, title} ->
         {:ok, tokens} = TypeToken.decode(title)
 
-        informations =
+        tokens =
           case tokens do
             [] ->
-              %{title: title}
+              %{}
 
             tokens ->
-              %{title: title, title_tokens: tokens}
+              %{title: tokens}
           end
 
-        decode_keyvalues(lines, informations)
+        decode_keyvalues(lines, %{}, tokens)
     end
   end
 
-  defp decode_keyvalues([], informations) do
-    informations
+  defp decode_keyvalues([], informations, tokens) do
+    {informations, tokens}
   end
 
-  defp decode_keyvalues([line | lines], informations) do
+  defp decode_keyvalues([line | lines], informations, tokens) do
     case key(line, line, 0, []) do
       :notfound ->
-        decode_keyvalues(lines, informations)
+        decode_keyvalues(lines, informations, tokens)
 
       {key, value} ->
-        {nkey, nvalue} =
+        {normalized_key, normalized_value} =
           {key, value}
           |> Normalizer.normalize()
           |> decode_field
 
-        informations = informations |> Map.put_new(nkey, nvalue)
-        decode_keyvalues(lines, informations)
+        informations =
+          informations
+          |> Map.put_new(normalized_key, normalized_value)
+
+        value_tokens = value |> TypeToken.decode()
+
+        tokens = tokens |> Map.put_new(normalized_key, value_tokens)
+
+        decode_keyvalues(lines, informations, tokens)
     end
   end
 
@@ -124,16 +131,6 @@ defmodule SeedParser.Decoder do
     end
   end
 
-  def decode_field({:style, style}) do
-    case style |> Style.decode() do
-      {:ok, value} ->
-        {:time, value}
-
-      {:error, error} ->
-        {:time, {:error, error}}
-    end
-  end
-
   def decode_field({:seeds, seeds}) do
     case seeds |> Seeds.decode() do
       {:ok, value} ->
@@ -141,42 +138,6 @@ defmodule SeedParser.Decoder do
 
       {:error, error} ->
         {:seeds, {:error, error}}
-    end
-  end
-
-  def decode_field({:required, seeds}) do
-    case seeds |> Required.decode() do
-      {:ok, value} ->
-        {:required, value}
-
-      {:error, error} ->
-        {:required, {:error, error}}
-    end
-  end
-
-  def decode_field({:participants, seeds}) do
-    case seeds |> Participants.decode() do
-      {:ok, value} ->
-        {:participants, value}
-
-      {:error, error} ->
-        {:participants, {:error, error}}
-    end
-  end
-
-  def decode_field({:max, seeds}) do
-    case seeds |> Max.decode() do
-      {:ok, value} when is_map(value) ->
-        {:max, value}
-
-      {:ok, value} when is_list(value) ->
-        {:max_tokens, value}
-
-      {:ok, value} ->
-        {:max, {:error, value}}
-
-      {:error, error} ->
-        {:max, {:error, error}}
     end
   end
 
@@ -218,10 +179,6 @@ defmodule SeedParser.Decoder do
 
   defp value(<<>>, original, skip, _stack) do
     error(original, skip)
-  end
-
-  defp participants(_rest, _original, _skip, _stack, value) do
-    {:participants, value}
   end
 
   defp value(_rest, _original, _skip, stack, value) do
@@ -298,9 +255,6 @@ defmodule SeedParser.Decoder do
 
       [@title | stack] ->
         title(rest, original, skip, stack, value)
-
-      [@participants | stack] ->
-        participants(rest, original, skip, stack, value)
     end
   end
 end

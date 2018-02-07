@@ -6,7 +6,7 @@ defmodule SeedParserElementSeedsTest do
   alias SeedParser.Element.Seeds
 
   test "parse participants" do
-    seeds = %{quantity: 50}
+    seeds = 50
     assert Seeds.decode("50") == {:ok, seeds}
   end
 end
