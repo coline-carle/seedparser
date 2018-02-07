@@ -1,4 +1,6 @@
 defmodule SeedParser.Element.Time do
+  defguard is_hour(value) when is_integer(value) and value >= 0 and value <= 24
+  defguard is_minute(value) when is_integer(value) and value >= 0 and value <= 60
   @moduledoc false
 
   @digits '01234556789'
@@ -7,6 +9,9 @@ defmodule SeedParser.Element.Time do
 
   alias SeedParser.DecodeError
 
+  @type t :: {Calendar.hour(), Calendar.minute(), Calendar.second()}
+
+  @spec decode(binary()) :: {:ok, t} | {:error, atom()}
   def decode(data) do
     try do
       hour(data, data, 0, [])
@@ -15,8 +20,18 @@ defmodule SeedParser.Element.Time do
         {:error, %DecodeError{position: position, data: data}}
     else
       value ->
-        {:ok, value |> Enum.into(%{})}
+        value
+        |> Enum.into(%{})
+        |> post_decode
     end
+  end
+
+  defp post_decode(%{hour: hour, minute: minute}) when is_hour(hour) and is_minute(minute) do
+    {:ok, {hour, minute, 0}}
+  end
+
+  defp post_decode(_) do
+    {:error, :invalid_time}
   end
 
   defp minute(<<byte, rest::bits>>, original, skip, stack, len) when byte in @digits do

@@ -6,7 +6,7 @@ defmodule SeedParserElementTimeTest do
   alias SeedParser.Element.Time
 
   test "parse time" do
-    time = %{:hour => 22, :minute => 00}
+    time = {22, 00, 00}
     assert Time.decode("22:00 Server Time") == {:ok, time}
   end
 end

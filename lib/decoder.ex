@@ -23,72 +23,16 @@ defmodule SeedParser.Decoder do
   @moduledoc false
 
   alias SeedParser.DecodeError
-  alias SeedParser.SeedRaid
   alias SeedParser.Normalizer
-  alias SeedParser.Element.{Date, Seeds, Time, TypeToken}
+  alias SeedParser.Element.{Date, Time, Title}
 
   # We use integers instead of atoms to take advantage of the jump table
   # optimization
   @title 0
   @key 1
   @value 2
-  @participants 3
 
-  # @letters 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
-  @digits '01234556789'
-  @default_options [transform: true]
-
-  def decode_title([]), do: :empty
-
-  def decode_title([line | lines]) do
-    case title(line, line, 0, []) do
-      :notfound ->
-        decode_title(lines)
-
-      {:title, title} ->
-        {:ok, tokens} = TypeToken.decode(title)
-
-        tokens =
-          case tokens do
-            [] ->
-              %{}
-
-            tokens ->
-              %{title: tokens}
-          end
-
-        decode_keyvalues(lines, %{}, tokens)
-    end
-  end
-
-  defp decode_keyvalues([], informations, tokens) do
-    {informations, tokens}
-  end
-
-  defp decode_keyvalues([line | lines], informations, tokens) do
-    case key(line, line, 0, []) do
-      :notfound ->
-        decode_keyvalues(lines, informations, tokens)
-
-      {key, value} ->
-        {normalized_key, normalized_value} =
-          {key, value}
-          |> Normalizer.normalize()
-          |> decode_field
-
-        informations =
-          informations
-          |> Map.put_new(normalized_key, normalized_value)
-
-        value_tokens = value |> TypeToken.decode()
-
-        tokens = tokens |> Map.put_new(normalized_key, value_tokens)
-
-        decode_keyvalues(lines, informations, tokens)
-    end
-  end
-
-  def decode(data, options \\ @default_options) do
+  def decode(data) do
     lines = data |> String.split("\n")
 
     try do
@@ -100,18 +44,76 @@ defmodule SeedParser.Decoder do
       :empty ->
         {:error, :empty}
 
-      value ->
-        case options |> Keyword.fetch(:transform) do
-          {:ok, true} ->
-            {:ok, value |> SeedRaid.transform()}
+      {:error, error} ->
+        {:error, error}
+
+      informations ->
+        meta =
+          informations
+          |> Enum.into(%{})
+
+        case meta do
+          %{time: _, date: _} ->
+            {:ok, meta}
+
+          %{date: _} ->
+            {:error, :missing_time}
 
           _ ->
-            {:ok, value}
+            {:error, :missing_date}
         end
     end
   end
 
-  def decode_field({:date, date}) do
+  defp decode_title([]), do: :empty
+
+  defp decode_title([line | lines]) do
+    case title(line, line, 0, []) do
+      :notfound ->
+        decode_title(lines)
+
+      {:title, title} ->
+        informations =
+          case Title.decode(title) do
+            {:error, _} ->
+              %{}
+
+            {:ok, {type, size}} ->
+              %{type: type, size: size}
+          end
+
+        decode_keyvalues(lines, informations)
+    end
+  end
+
+  defp decode_keyvalues([], informations) do
+    informations
+  end
+
+  defp decode_keyvalues([line | lines], informations) do
+    case key(line, line, 0, []) do
+      :notfound ->
+        decode_keyvalues(lines, informations)
+
+      {key, value} ->
+        field =
+          {key, value}
+          |> Normalizer.normalize()
+
+        informations =
+          case field |> decode_field do
+            {normalized_key, normalized_value} ->
+              informations |> Map.put_new(normalized_key, normalized_value)
+
+            _ ->
+              informations
+          end
+
+        decode_keyvalues(lines, informations)
+    end
+  end
+
+  defp decode_field({:date, date}) do
     case date |> Date.decode() do
       {:ok, value} ->
         {:date, value}
@@ -121,7 +123,7 @@ defmodule SeedParser.Decoder do
     end
   end
 
-  def decode_field({:time, time}) do
+  defp decode_field({:time, time}) do
     case time |> Time.decode() do
       {:ok, value} ->
         {:time, value}
@@ -131,18 +133,8 @@ defmodule SeedParser.Decoder do
     end
   end
 
-  def decode_field({:seeds, seeds}) do
-    case seeds |> Seeds.decode() do
-      {:ok, value} ->
-        {:seeds, value}
-
-      {:error, error} ->
-        {:seeds, {:error, error}}
-    end
-  end
-
-  def decode_field({field, value}) do
-    {field, value}
+  defp decode_field(_) do
+    nil
   end
 
   defp error(_original, skip) do
@@ -155,10 +147,6 @@ defmodule SeedParser.Decoder do
 
   defp key(<<?[, rest::bits>>, original, skip, stack) do
     bracket(rest, original, skip + 1, [@key | stack], 0)
-  end
-
-  defp key(<<?(, byte, rest::bits>>, original, skip, stack) when byte in @digits do
-    paren(rest, original, skip + 1, [@participants | stack], 1)
   end
 
   defp key(<<_::bits>>, _original, _skip, _stack) do

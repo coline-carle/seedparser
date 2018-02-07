@@ -1,5 +1,7 @@
 defmodule SeedParser.Element.Date do
   @moduledoc false
+  defguard is_day(value) when is_integer(value) and value >= 1 and value <= 31
+  defguard is_month(value) when is_integer(value) and value >= 1 and value <= 12
 
   @digits '01234556789'
   @spaces '\s\t,.&/'
@@ -33,6 +35,9 @@ defmodule SeedParser.Element.Date do
     "december" => {:month, 12}
   }
 
+  @type t :: {Calendar.year(), Calendar.month(), Calendar.day()}
+
+  @spec decode(binary()) :: {:ok, t} | {:error, atom()}
   def decode(data) do
     try do
       node(data, data, 0, [])
@@ -41,12 +46,42 @@ defmodule SeedParser.Element.Date do
         {:error, %DecodeError{position: position, data: data}}
     else
       value ->
-        {:ok,
-         value
-         |> Enum.reverse()
-         |> postprocess([])
-         |> Enum.into(%{})}
+        value
+        |> Enum.reverse()
+        |> postprocess([])
+        |> Enum.into(%{})
+        |> normalize()
     end
+  end
+
+  defp normalize(%{year: year, month: month, day: day}) when is_month(month) and is_day(day) do
+    now = DateTime.utc_now()
+
+    year =
+      case year do
+        year when year < 2000 ->
+          year + 2000
+
+        year ->
+          year
+      end
+
+    case abs(now.year - year) do
+      delta when delta <= 1 ->
+        {:ok, {year, month, day}}
+
+      _ ->
+        {:error, :invalid_date}
+    end
+  end
+
+  defp normalize(%{month: month, day: day}) do
+    now = DateTime.utc_now()
+    normalize(%{year: now.year, month: month, day: day})
+  end
+
+  defp normalize(_) do
+    {:error, :invalid_date}
   end
 
   defp postprocess([node | rest], acc) do

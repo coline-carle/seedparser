@@ -1,4 +1,4 @@
-defmodule Mix.Tasks.Template.ToJson do
+defmodule Mix.Tasks.Template.Parse do
   @moduledoc false
 
   use Mix.Task
@@ -11,7 +11,7 @@ defmodule Mix.Tasks.Template.ToJson do
     {:ok, informations} = Decoder.decode(template)
 
     informations
-    |> Encoder.encode(pretty: true)
+    |> inspect()
     |> IO.puts()
   end
 end

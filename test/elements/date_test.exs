@@ -6,12 +6,13 @@ defmodule SeedParserElementDateTest do
   alias SeedParser.Element.Date
 
   test "parse date" do
-    date = %{:weekday => :monday, :month => 1, :day => 1}
+    now = DateTime.utc_now()
+    date = {now.year, 1, 1}
     assert Date.decode("Monday, January 1st") == {:ok, date}
   end
 
   test "parse numeral date" do
-    date = %{:weekday => :monday, :month => 1, :day => 22, :year => 18}
+    date = {2018, 1, 22}
     assert Date.decode("Monday 22/01/18") == {:ok, date}
   end
 end
