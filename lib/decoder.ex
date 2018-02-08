@@ -2,6 +2,8 @@ defmodule SeedParser.Decoder do
   @moduledoc false
   defguard is_day(value) when is_integer(value) and value >= 1 and value <= 31
   defguard is_month(value) when is_integer(value) and value >= 1 and value <= 12
+  defguard is_hour(value) when is_integer(value) and value >= 0 and value <= 24
+  defguard is_minute(value) when is_integer(value) and value >= 0 and value < 60
 
   alias SeedParser.Tokenizer
 

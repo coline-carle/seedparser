@@ -60,6 +60,15 @@ defmodule SeedParser.Tokenizer do
     continue(rest, original, skip + len, stack, value)
   end
 
+  # final point is often use for abreviations just ignore them
+  defp text(<<?., rest::bits>>, original, skip, stack, len) do
+    value =
+      original
+      |> binary_part(skip, len)
+
+    continue(rest, original, skip + len + 1, stack, value)
+  end
+
   defp text(<<byte, _::bits>> = rest, original, skip, stack, len)
        when byte in @spaces or byte in @punct do
     value =
