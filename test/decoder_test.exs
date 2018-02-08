@@ -9,25 +9,29 @@ defmodule SeedParserDecoderTest do
     {:ok, text} = File.read("./test/fixtures/thalipedes.md")
 
     informations = %{
-      date: {2018, 1, 1},
+      date: ~D[2018-01-01],
       time: {22, 0, 0},
       type: :mix,
       seeds: 60
     }
 
-    assert Decoder.decode(text) == {:ok, informations}
+    today = ~D[2018-01-01]
+
+    assert Decoder.decode(text, today) == {:ok, informations}
   end
 
   test "sholenar template" do
     {:ok, text} = File.read("./test/fixtures/sholenar.md")
 
     informations = %{
-      date: {2018, 1, 22},
+      date: ~D[2018-01-22],
       time: {21, 0, 0},
       seeds: 100,
       type: :mix
     }
 
-    assert Decoder.decode(text) == {:ok, informations}
+    today = ~D[2018-01-01]
+
+    assert Decoder.decode(text, today) == {:ok, informations}
   end
 end
