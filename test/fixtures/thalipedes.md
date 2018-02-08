@@ -1,5 +1,5 @@
 ```md
-<CREATIVE TITLE HERE>
+<60 Mix>
 
 [DATE:](Monday, January 1st)
 

@@ -10,7 +10,9 @@ defmodule SeedParserDecoderTest do
 
     informations = %{
       date: {2018, 1, 1},
-      time: {22, 0, 0}
+      time: {22, 0, 0},
+      type: :mix,
+      seeds: 60
     }
 
     assert Decoder.decode(text) == {:ok, informations}
@@ -22,7 +24,7 @@ defmodule SeedParserDecoderTest do
     informations = %{
       date: {2018, 1, 22},
       time: {21, 0, 0},
-      size: 100,
+      seeds: 100,
       type: :mix
     }
 

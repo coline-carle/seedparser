@@ -27,11 +27,30 @@ defmodule SeedParserTokenizerTest do
     text = "[DATE:](Thursday, Feb 8th)"
     tokens = [{:number, 08}, {:month, 02}, {:punct, ","}, {:weekday, 3}]
     assert Tokenizer.decode(text) == tokens
+
+    text = "[[DATE:](Monday, January 1st)"
+    tokens = [{:number, 01}, {:month, 01}, {:punct, ","}, {:weekday, 0}]
+    assert Tokenizer.decode(text) == tokens
   end
 
   test "date-eu-alliance-1" do
     text = "DATE: Thursday, 08.02"
     tokens = [{:number, 02}, {:punct, "."}, {:number, 08}, {:punct, ","}, {:weekday, 3}]
+    assert Tokenizer.decode(text) == tokens
+  end
+
+  test "date-eu-aliance-3" do
+    text = "[DATE:](Monday 22/01/18)"
+
+    tokens = [
+      {:number, 18},
+      {:punct, "/"},
+      {:number, 01},
+      {:punct, "/"},
+      {:number, 22},
+      {:weekday, 0}
+    ]
+
     assert Tokenizer.decode(text) == tokens
   end
 end
