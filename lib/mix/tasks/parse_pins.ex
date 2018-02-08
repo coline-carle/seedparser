@@ -7,18 +7,30 @@ defmodule Mix.Tasks.Discord.ParsePins do
   alias SeedParser.Decoder
 
   def parse_pin(message) do
-    File.write("pins/#{message.id}.original", message.content)
+    IO.puts("MESSAGE")
+    IO.puts("-------")
+
+    message.content
+    |> IO.puts()
 
     case Decoder.decode(message.content) do
       {:ok, informations} ->
-        json_data =
-          informations
-          |> Encoder.encode(pretty: true)
+        IO.puts("metadata")
+        IO.puts("-------")
 
-        File.write("pins/#{message.id}.json", json_data)
+        informations
+        |> inspect()
+        |> IO.puts()
 
-      _ ->
-        :dontsave
+        IO.puts("\n")
+        IO.puts("\n")
+
+      {:error, error} ->
+        IO.puts("metadata")
+        IO.puts("-------")
+        IO.puts("cannot parse metadata, error: #{error}")
+        IO.puts("\n")
+        IO.puts("\n")
     end
   end
 
@@ -31,4 +43,6 @@ defmodule Mix.Tasks.Discord.ParsePins do
     |> Api.get_pinned_messages!()
     |> Enum.each(&parse_pin/1)
   end
+
+  def run(_), do: IO.puts("provide channel id as parameter")
 end
