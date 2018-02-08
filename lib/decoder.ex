@@ -9,6 +9,14 @@ defmodule SeedParser.Decoder do
 
   @elements [:date, :seeds, :time, :type]
 
+  @type time :: {Calendar.hour(), Calendar.minute(), Calendar.second()}
+  @type date :: {Calendar.year(), Calendar.month(), Calendar.day()}
+  @type type ::
+          :starlight_rose
+          | :mix
+          | :foxflower
+  @type seeds :: integer
+
   def decode(data) do
     data
     |> String.split("\n")
