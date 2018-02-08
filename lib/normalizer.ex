@@ -15,17 +15,27 @@ defmodule SeedParser.Normalizer do
     "saturday" => {:weekday, 5},
     "sunday" => {:weekday, 6},
     "january" => {:month, 1},
+    "jan" => {:month, 1},
     "february" => {:month, 2},
+    "feb" => {:month, 2},
     "march" => {:month, 3},
+    "mar" => {:month, 3},
     "april" => {:weekday, 4},
+    "apr" => {:weekday, 4},
     "may" => {:month, 5},
     "june" => {:month, 6},
+    "jun" => {:month, 6},
     "july" => {:month, 7},
     "august" => {:month, 8},
+    "aug" => {:month, 8},
     "september" => {:month, 9},
+    "sept" => {:month, 9},
     "october" => {:month, 10},
+    "oct" => {:month, 10},
     "november" => {:month, 11},
-    "december" => {:month, 12}
+    "nov" => {:month, 11},
+    "december" => {:month, 12},
+    "dec" => {:month, 12}
   }
 
   @type token ::

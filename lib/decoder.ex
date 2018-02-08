@@ -1,37 +1,33 @@
-defmodule SeedParser.DecodeError do
-  @type t :: %__MODULE__{position: integer, data: String.t()}
-
-  defexception [:position, :data]
-
-  def message(%{position: position, data: data}) when position == byte_size(data) do
-    "unexpected end of input at position #{position}"
-  end
-
-  def message(%{position: position, data: data}) do
-    byte = :binary.at(data, position)
-    str = <<byte>>
-
-    if String.printable?(str) do
-      "unexpected byte at position #{position}: " <> "#{inspect(byte, base: :hex)} ('#{str}')"
-    else
-      "unexpected byte at position #{position}: " <> "#{inspect(byte, base: :hex)}"
-    end
-  end
-end
-
 defmodule SeedParser.Decoder do
   @moduledoc false
 
-  alias SeedParser.DecodeError
-  alias SeedParser.Normalizer
-
-  # We use integers instead of atoms to take advantage of the jump table
-  # optimization
-  @title 0
-  @key 1
-  @value 2
+  alias SeedParser.Tokenizer
 
   def decode(data) do
-    lines = data |> String.split("\n")
+    data
+    |> String.split("\n")
+    |> decode_line([])
+  end
+
+  defp decode_line([], stack), do: stack
+
+  defp decode_line([line | lines], stack) do
+    stack =
+      line
+      |> Tokenizer.decode()
+      |> decode_tokens(stack)
+
+    decode_line(lines, stack)
+  end
+
+  defp decode_tokens([], stack), do: stack
+
+  defp decode_tokens([{:type, type}, {:number, seeds} | tokens], stack) do
+    stack = [{:type, type}, {seeds, :seeds} | stack]
+    decode_tokens(tokens, stack)
+  end
+
+  defp decode_tokens([_any | tokens], stack) do
+    decode_tokens(tokens, stack)
   end
 end
