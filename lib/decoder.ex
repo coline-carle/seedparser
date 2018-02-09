@@ -1,16 +1,10 @@
 defmodule SeedParser.Decoder do
   @moduledoc false
-  defguard is_hour(value) when is_integer(value) and value >= 0 and value <= 24
-  defguard is_minute(value) when is_integer(value) and value >= 0 and value < 60
-
   require Logger
 
   alias SeedParser.Tokenizer
 
   @elements [:date, :seeds, :time, :type]
-
-  @type time :: {Calendar.hour(), Calendar.minute(), Calendar.second()}
-  @type date :: {Calendar.year(), Calendar.month(), Calendar.day()}
   @type type ::
           :starlight_rose
           | :mix
@@ -27,15 +21,15 @@ defmodule SeedParser.Decoder do
     |> String.split("\n")
     |> decode_line([], today)
     |> Enum.into(%{})
-    |> validity_check
+    |> validity_check(data)
   end
 
-  defp validity_check(metadata) do
+  defp validity_check(metadata, data) do
     case metadata
          |> Map.to_list()
          |> has_all_elements? do
       true ->
-        {:ok, metadata}
+        {:ok, struct(%SeedParser{content: data}, metadata)}
 
       false ->
         missing_error(@elements, metadata)
@@ -129,13 +123,23 @@ defmodule SeedParser.Decoder do
         decode_tokens(rest, stack, today)
 
       :error ->
-        stack = [{:time, {hour, minute, 0}} | stack]
+        stack = stack |> insert_if_valid_time(hour, minute)
         continue(rest, stack, today)
     end
   end
 
   defp decode_tokens([_any | tokens], stack, today) do
     decode_tokens(tokens, stack, today)
+  end
+
+  defp insert_if_valid_time(stack, hour, minute) do
+    case Time.new(hour, minute, 0) do
+      {:ok, time} ->
+        [{:time, time} | stack]
+
+      _ ->
+        stack
+    end
   end
 
   defp insert_if_valid_date(stack, year, month, day, today) do
