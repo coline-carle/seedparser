@@ -21,6 +21,16 @@ defmodule SeedParserDecoderTest do
     assert Decoder.decode(text, today) == {:ok, informations}
   end
 
+  test "format" do
+    text = "text ```md text again ```"
+    output = "text\n```md\ntext again\n```\n"
+    assert Decoder.format(text) == output
+
+    text = "```md text ``````md text again ```"
+    output = "\n```md\ntext\n```\n\n```md\ntext again\n```\n"
+    assert Decoder.format(text) == output
+  end
+
   test "sholenar template" do
     {:ok, text} = File.read("./test/fixtures/sholenar.md")
 

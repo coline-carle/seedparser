@@ -24,6 +24,10 @@ defmodule SeedParser.Decoder do
     |> validity_check(data)
   end
 
+  def format(data) do
+    Regex.replace(~r/\n?\s*(```\w*)\s*\n?/, data, "\n\\1\n")
+  end
+
   defp validity_check(metadata, data) do
     case metadata
          |> Map.to_list()
