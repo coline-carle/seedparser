@@ -69,26 +69,22 @@ defmodule SeedParser.Decoder do
 
   defp decode_tokens([{:type, type}, {:number, seeds} | rest], stack, options)
        when seeds in @seed_range do
-    case stack |> Keyword.fetch(:type) do
-      {:ok, _} ->
-        decode_tokens(rest, stack, options)
+    stack =
+      stack
+      |> Keyword.put(:type, type)
+      |> Keyword.put(:seeds, seeds)
 
-      :error ->
-        stack = [{:type, type}, {:seeds, seeds} | stack]
-        decode_tokens(rest, stack, options)
-    end
+    decode_tokens(rest, stack, options)
   end
 
   defp decode_tokens([{:number, seeds}, {:type, type} | rest], stack, options)
        when seeds in @seed_range do
-    case stack |> Keyword.fetch(:type) do
-      {:ok, _} ->
-        decode_tokens(rest, stack, options)
+    stack =
+      stack
+      |> Keyword.put(:type, type)
+      |> Keyword.put(:seeds, seeds)
 
-      :error ->
-        stack = [{:type, type}, {:seeds, seeds} | stack]
-        decode_tokens(rest, stack, options)
-    end
+    decode_tokens(rest, stack, options)
   end
 
   defp decode_tokens(
@@ -96,14 +92,8 @@ defmodule SeedParser.Decoder do
          stack,
          %{date: :eu} = options
        ) do
-    case stack |> Keyword.fetch(:date) do
-      {:ok, _} ->
-        decode_tokens(rest, stack, options)
-
-      :error ->
-        stack = stack |> insert_if_valid_date(year, month, day, options)
-        continue(rest, stack, options)
-    end
+    stack = stack |> insert_if_valid_date(year, month, day, options)
+    continue(rest, stack, options)
   end
 
   defp decode_tokens(
@@ -111,14 +101,8 @@ defmodule SeedParser.Decoder do
          stack,
          %{date: :us} = options
        ) do
-    case stack |> Keyword.fetch(:date) do
-      {:ok, _} ->
-        decode_tokens(rest, stack, options)
-
-      :error ->
-        stack = stack |> insert_if_valid_date(year, month, day, options)
-        continue(rest, stack, options)
-    end
+    stack = stack |> insert_if_valid_date(year, month, day, options)
+    continue(rest, stack, options)
   end
 
   defp decode_tokens(
@@ -132,36 +116,25 @@ defmodule SeedParser.Decoder do
          stack,
          %{today: today} = options
        ) do
-    case stack |> Keyword.fetch(:date) do
-      {:ok, _} ->
-        decode_tokens(rest, stack, options)
+    stack = stack |> insert_if_valid_date(today.year, month, day, options)
+    continue(rest, stack, options)
+  end
 
-      :error ->
-        stack = stack |> insert_if_valid_date(today.year, month, day, options)
-        continue(rest, stack, options)
-    end
+  defp decode_tokens([{:timezone, :est}, {:number, combined} | rest], stack, options) do
+    hour = div(combined, 100)
+    minute = rem(combined, 100)
+    stack = stack |> insert_if_valid_time(hour, minute)
+    continue(rest, stack, options)
   end
 
   defp decode_tokens([{:number, day}, {:month, month} | rest], stack, %{today: today} = options) do
-    case stack |> Keyword.fetch(:date) do
-      {:ok, _} ->
-        decode_tokens(rest, stack, options)
-
-      :error ->
-        stack = stack |> insert_if_valid_date(today.year, month, day, options)
-        continue(rest, stack, options)
-    end
+    stack = stack |> insert_if_valid_date(today.year, month, day, options)
+    continue(rest, stack, options)
   end
 
   defp decode_tokens([{:number, minute}, {:punct, ":"}, {:number, hour} | rest], stack, options) do
-    case stack |> Keyword.fetch(:time) do
-      {:ok, _} ->
-        decode_tokens(rest, stack, options)
-
-      :error ->
-        stack = stack |> insert_if_valid_time(hour, minute)
-        continue(rest, stack, options)
-    end
+    stack = stack |> insert_if_valid_time(hour, minute)
+    continue(rest, stack, options)
   end
 
   defp decode_tokens([_any | tokens], stack, options) do

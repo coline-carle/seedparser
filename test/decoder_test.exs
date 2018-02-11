@@ -59,4 +59,19 @@ defmodule SeedParserDecoderTest do
 
     assert Decoder.decode(text, today: today, date: :us) == {:ok, metadata}
   end
+
+  test "event string us" do
+    text = "[30 FF] [2300 EST Sun, 2/11/18] ***This is 3/3 raids back to back.***"
+
+    metadata = %SeedParser{
+      date: ~D[2018-02-11],
+      time: ~T[23:00:00],
+      seeds: 30,
+      type: :foxflower
+    }
+
+    today = ~D[2018-02-11]
+
+    assert Decoder.decode(text, today: today, date: :us) == {:ok, metadata}
+  end
 end
