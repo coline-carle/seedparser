@@ -17,6 +17,12 @@ defmodule SeedParserTokenizerTest do
     assert Tokenizer.decode(text) == tokens
   end
 
+  test "30 foxflower" do
+    text = "```ini [30 Foxflower]``````markdown"
+    tokens = [{:type, :foxflower}, {:number, 30}]
+    assert Tokenizer.decode(text) == tokens
+  end
+
   test "final point" do
     text = "Jan. 23"
     tokens = [{:number, 23}, {:month, 1}]
