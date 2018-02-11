@@ -4,9 +4,11 @@ defmodule SeedParser.Normalizer do
   @tokens %{
     "ff" => {:type, :foxflower},
     "fox" => {:type, :foxflower},
+    "foxflower" => {:type, :foxflower},
     "mix" => {:type, :mix},
     "mixed" => {:type, :mix},
     "slr" => {:type, :starlight_rose},
+    "starlight" => {:type, :starlight_rose},
     "monday" => {:weekday, 0},
     "tuesday" => {:weekday, 1},
     "wednesday" => {:weekday, 2},
