@@ -18,7 +18,7 @@ defmodule SeedParserDecoderTest do
 
     today = ~D[2018-01-01]
 
-    assert Decoder.decode(text, today) == {:ok, informations}
+    assert Decoder.decode(text, today: today) == {:ok, informations}
   end
 
   test "format" do
@@ -44,6 +44,6 @@ defmodule SeedParserDecoderTest do
 
     today = ~D[2018-01-01]
 
-    assert Decoder.decode(text, today) == {:ok, informations}
+    assert Decoder.decode(text, today: today) == {:ok, informations}
   end
 end
