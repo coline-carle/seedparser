@@ -38,7 +38,7 @@ defmodule SeedParser.Decoder do
   end
 
   def format(data) do
-    Regex.replace(~r/\n?\s*(```\w*)\s*\n?/, data, "\n\\1\n")
+    Regex.replace(~r/\n?\s*(```[a-z]*)\s*\n?/, data, "\n\\1\n")
   end
 
   defp validity_check(metadata) do
