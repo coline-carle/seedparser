@@ -11,6 +11,8 @@ defmodule SeedParser.Decoder do
           | :foxflower
   @type seeds :: integer
 
+  @seed_range 20..400
+
   def decode(data, options \\ []) do
     defaults = [today: Date.utc_today(), date: :eu]
 
@@ -65,7 +67,20 @@ defmodule SeedParser.Decoder do
 
   defp decode_tokens([], stack, _), do: stack
 
-  defp decode_tokens([{:type, type}, {:number, seeds} | rest], stack, options) do
+  defp decode_tokens([{:type, type}, {:number, seeds} | rest], stack, options)
+       when seeds in @seed_range do
+    case stack |> Keyword.fetch(:type) do
+      {:ok, _} ->
+        decode_tokens(rest, stack, options)
+
+      :error ->
+        stack = [{:type, type}, {:seeds, seeds} | stack]
+        decode_tokens(rest, stack, options)
+    end
+  end
+
+  defp decode_tokens([{:number, seeds}, {:type, type} | rest], stack, options)
+       when seeds in @seed_range do
     case stack |> Keyword.fetch(:type) do
       {:ok, _} ->
         decode_tokens(rest, stack, options)
