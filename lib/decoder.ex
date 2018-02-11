@@ -159,7 +159,7 @@ defmodule SeedParser.Decoder do
     case Date.new(fullyear, month, day) do
       {:ok, date} ->
         case Date.diff(date, today) do
-          days when days in 0..45 ->
+          days when days in -7..45 ->
             [{:date, date} | stack]
 
           _ ->
