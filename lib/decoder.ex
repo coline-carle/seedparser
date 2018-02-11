@@ -21,11 +21,20 @@ defmodule SeedParser.Decoder do
       |> Keyword.merge(options)
       |> Enum.into(%{})
 
-    data
-    |> String.split("\n")
-    |> decode_line([], options)
-    |> Enum.into(%{})
-    |> validity_check()
+    metadata =
+      data
+      |> String.split("\n")
+      |> decode_line([], options)
+      |> Enum.into(%{})
+
+    case metadata do
+      %{error: error} ->
+        {:error, error}
+
+      _ ->
+        metadata
+        |> validity_check()
+    end
   end
 
   def format(data) do
@@ -66,6 +75,10 @@ defmodule SeedParser.Decoder do
   end
 
   defp decode_tokens([], stack, _), do: stack
+
+  defp decode_tokens([{:token, :events}, {:token, :upcoming} | _], _stack, _options) do
+    [error: :upcoming]
+  end
 
   defp decode_tokens([{:type, type}, {:number, seeds} | rest], stack, options)
        when seeds in @seed_range do

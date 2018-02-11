@@ -74,4 +74,10 @@ defmodule SeedParserDecoderTest do
 
     assert Decoder.decode(text, today: today, date: :us) == {:ok, metadata}
   end
+
+  test "upcomming event error" do
+    text = "```ini [List of upcoming raids] [Read each individual raid post before signing up]```"
+
+    assert Decoder.decode(text) == {:error, :upcoming}
+  end
 end

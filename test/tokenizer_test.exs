@@ -60,6 +60,17 @@ defmodule SeedParserTokenizerTest do
     assert Tokenizer.decode(text) == tokens
   end
 
+  test "upcomming" do
+    text = "[List of upcoming raids]"
+
+    tokens = [
+      {:token, :events},
+      {:token, :upcoming}
+    ]
+
+    assert Tokenizer.decode(text) == tokens
+  end
+
   test "date-eu-aliance-3" do
     text = "[DATE:](Monday 22/01/18)"
 
