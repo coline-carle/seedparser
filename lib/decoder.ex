@@ -13,25 +13,29 @@ defmodule SeedParser.Decoder do
 
   def decode(data, options \\ []) do
     defaults = [today: Date.utc_today(), date: :eu]
-    options = Keyword.merge(defaults, options) |> Enum.into(%{})
+
+    options =
+      defaults
+      |> Keyword.merge(options)
+      |> Enum.into(%{})
 
     data
     |> String.split("\n")
     |> decode_line([], options)
     |> Enum.into(%{})
-    |> validity_check(data)
+    |> validity_check()
   end
 
   def format(data) do
     Regex.replace(~r/\n?\s*(```\w*)\s*\n?/, data, "\n\\1\n")
   end
 
-  defp validity_check(metadata, data) do
+  defp validity_check(metadata) do
     case metadata
          |> Map.to_list()
          |> has_all_elements? do
       true ->
-        {:ok, struct(%SeedParser{content: data}, metadata)}
+        {:ok, struct(%SeedParser{}, metadata)}
 
       false ->
         missing_error(@elements, metadata)
@@ -75,7 +79,22 @@ defmodule SeedParser.Decoder do
   defp decode_tokens(
          [{:number, year}, {:punct, "/"}, {:number, month}, {:punct, "/"}, {:number, day} | rest],
          stack,
-         options
+         %{date: :eu} = options
+       ) do
+    case stack |> Keyword.fetch(:date) do
+      {:ok, _} ->
+        decode_tokens(rest, stack, options)
+
+      :error ->
+        stack = stack |> insert_if_valid_date(year, month, day, options)
+        continue(rest, stack, options)
+    end
+  end
+
+  defp decode_tokens(
+         [{:number, year}, {:punct, "/"}, {:number, day}, {:punct, "/"}, {:number, month} | rest],
+         stack,
+         %{date: :us} = options
        ) do
     case stack |> Keyword.fetch(:date) do
       {:ok, _} ->
@@ -163,6 +182,9 @@ defmodule SeedParser.Decoder do
           _ ->
             stack
         end
+
+      _ ->
+        stack
     end
   end
 

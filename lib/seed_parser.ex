@@ -1,5 +1,5 @@
 defmodule SeedParser do
-  @moduledoc "struct format"
+  @moduledoc "extracted raid metadata struct"
   @type type ::
           :starlight_rose
           | :mix
@@ -9,9 +9,8 @@ defmodule SeedParser do
           date: Date.t(),
           time: Time.t(),
           seeds: integer,
-          type: type,
-          content: binary()
+          type: type
         }
 
-  defstruct [:date, :time, :seeds, :type, :content]
+  defstruct [:date, :time, :seeds, :type]
 end

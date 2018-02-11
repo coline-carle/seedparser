@@ -8,17 +8,16 @@ defmodule SeedParserDecoderTest do
   test "thalipedes template" do
     {:ok, text} = File.read("./test/fixtures/thalipedes.md")
 
-    informations = %SeedParser{
+    metadata = %SeedParser{
       date: ~D[2018-01-01],
       time: ~T[22:00:00],
       type: :mix,
-      seeds: 60,
-      content: text
+      seeds: 60
     }
 
     today = ~D[2018-01-01]
 
-    assert Decoder.decode(text, today: today) == {:ok, informations}
+    assert Decoder.decode(text, today: today) == {:ok, metadata}
   end
 
   test "format" do
@@ -34,16 +33,30 @@ defmodule SeedParserDecoderTest do
   test "sholenar template" do
     {:ok, text} = File.read("./test/fixtures/sholenar.md")
 
-    informations = %SeedParser{
+    metadata = %SeedParser{
       date: ~D[2018-01-22],
       time: ~T[21:00:00],
       seeds: 100,
-      type: :mix,
-      content: text
+      type: :mix
     }
 
     today = ~D[2018-01-01]
 
-    assert Decoder.decode(text, today: today) == {:ok, informations}
+    assert Decoder.decode(text, today: today) == {:ok, metadata}
+  end
+
+  test "sholenar template (us version)" do
+    {:ok, text} = File.read("./test/fixtures/us_date.md")
+
+    metadata = %SeedParser{
+      date: ~D[2018-01-22],
+      time: ~T[21:00:00],
+      seeds: 100,
+      type: :mix
+    }
+
+    today = ~D[2018-01-01]
+
+    assert Decoder.decode(text, today: today, date: :us) == {:ok, metadata}
   end
 end
