@@ -95,6 +95,20 @@ defmodule SeedParserDecoderTest do
     assert Decoder.decode(text, today: today, date: :us) == {:ok, metadata}
   end
 
+  test "point dates" do
+    text = "ini [100 SLR Raid]``````fix • Date: 13.02.2018. • Time: 19:00 CET • "
+
+    metadata = %SeedParser{
+      date: ~D[2018-02-13],
+      time: ~T[19:00:00],
+      seeds: 100,
+      type: :starlight_rose
+    }
+
+    today = ~D[2018-02-11]
+    assert Decoder.decode(text, today: today, date: :eu) == {:ok, metadata}
+  end
+
   test "two types" do
     text = "[200 Mixed] [100 fox][No FF]\n[19:00 EST  Sun Feb 11]"
 

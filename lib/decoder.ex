@@ -101,7 +101,13 @@ defmodule SeedParser.Decoder do
   end
 
   defp decode_tokens(
-         [{:number, year}, {:punct, "/"}, {:number, month}, {:punct, "/"}, {:number, day} | rest],
+         [
+           {:number, year},
+           {:punct, punct},
+           {:number, month},
+           {:punct, punct},
+           {:number, day} | rest
+         ],
          stack,
          %{date: :eu} = options
        ) do
@@ -110,7 +116,13 @@ defmodule SeedParser.Decoder do
   end
 
   defp decode_tokens(
-         [{:number, year}, {:punct, "/"}, {:number, day}, {:punct, "/"}, {:number, month} | rest],
+         [
+           {:number, year},
+           {:punct, punct},
+           {:number, day},
+           {:punct, punct},
+           {:number, month} | rest
+         ],
          stack,
          %{date: :us} = options
        ) do
