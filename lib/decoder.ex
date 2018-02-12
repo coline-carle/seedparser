@@ -133,6 +133,20 @@ defmodule SeedParser.Decoder do
     continue(rest, stack, options)
   end
 
+  defp decode_tokens(
+         [{:timezone, _any}, {:number, minute}, {:punct, ":"}, {:number, hour} | rest],
+         stack,
+         options
+       ) do
+    stack = stack |> insert_if_valid_time(hour, minute)
+    continue(rest, stack, options)
+  end
+
+  defp decode_tokens([{:number, minute}, {:punct, ":"}, {:number, hour} | rest], stack, options) do
+    stack = stack |> insert_if_valid_time(hour, minute)
+    continue(rest, stack, options)
+  end
+
   defp decode_tokens([{:timezone, :est}, {:number, combined} | rest], stack, options) do
     hour = div(combined, 100)
     minute = rem(combined, 100)
@@ -142,11 +156,6 @@ defmodule SeedParser.Decoder do
 
   defp decode_tokens([{:number, day}, {:month, month} | rest], stack, %{today: today} = options) do
     stack = stack |> insert_if_valid_date(today.year, month, day, options)
-    continue(rest, stack, options)
-  end
-
-  defp decode_tokens([{:number, minute}, {:punct, ":"}, {:number, hour} | rest], stack, options) do
-    stack = stack |> insert_if_valid_time(hour, minute)
     continue(rest, stack, options)
   end
 
