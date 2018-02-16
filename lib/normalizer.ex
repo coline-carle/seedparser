@@ -24,6 +24,8 @@ defmodule SeedParser.Normalizer do
     "january" => {:month, 1},
     "jan" => {:month, 1},
     "february" => {:month, 2},
+    # parse this typo
+    "febuary" => {:month, 2},
     "feb" => {:month, 2},
     "march" => {:month, 3},
     "mar" => {:month, 3},
