@@ -124,7 +124,7 @@ defmodule SeedParser.Decoder do
            {:number, month} | rest
          ],
          stack,
-         %{date: :us} = options
+         %{date: :na} = options
        ) do
     stack = stack |> insert_if_valid_date(year, month, day, options)
     continue(rest, stack, options)

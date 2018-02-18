@@ -57,7 +57,7 @@ defmodule SeedParserDecoderTest do
 
     today = ~D[2018-01-01]
 
-    assert Decoder.decode(text, today: today, date: :us) == {:ok, metadata}
+    assert Decoder.decode(text, today: today, date: :na) == {:ok, metadata}
   end
 
   test "event string us" do
@@ -72,7 +72,7 @@ defmodule SeedParserDecoderTest do
 
     today = ~D[2018-02-11]
 
-    assert Decoder.decode(text, today: today, date: :us) == {:ok, metadata}
+    assert Decoder.decode(text, today: today, date: :na) == {:ok, metadata}
   end
 
   test "upcomming event error" do
@@ -92,7 +92,7 @@ defmodule SeedParserDecoderTest do
     }
 
     today = ~D[2018-02-11]
-    assert Decoder.decode(text, today: today, date: :us) == {:ok, metadata}
+    assert Decoder.decode(text, today: today, date: :na) == {:ok, metadata}
   end
 
   test "point dates" do
@@ -120,6 +120,6 @@ defmodule SeedParserDecoderTest do
     }
 
     today = ~D[2018-02-11]
-    assert Decoder.decode(text, today: today, date: :us) == {:ok, metadata}
+    assert Decoder.decode(text, today: today, date: :na) == {:ok, metadata}
   end
 end
