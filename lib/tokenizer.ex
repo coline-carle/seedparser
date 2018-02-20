@@ -18,12 +18,12 @@ defmodule SeedParser.Tokenizer do
     node(line, line, 0, [])
   end
 
-  defp node(<<?<, ?@, ?!, rest::bits>>, original, skip, stack) do
-    number(rest, original, skip + 3, [@user | stack], 0)
+  defp node(<<?<, ?@, ?!, byte, rest::bits>>, original, skip, stack) when byte in @digits do
+    number(rest, original, skip + 3, [@user | stack], 1)
   end
 
-  defp node(<<?<, ?@, rest::bits>>, original, skip, stack) do
-    number(rest, original, skip + 2, [@user | stack], 0)
+  defp node(<<?<, ?@, byte, rest::bits>>, original, skip, stack) when byte in @digits do
+    number(rest, original, skip + 2, [@user | stack], 1)
   end
 
   defp node(<<byte, rest::bits>>, original, skip, stack) when byte in @spaces do
