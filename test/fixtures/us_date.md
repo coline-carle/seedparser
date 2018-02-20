@@ -12,5 +12,5 @@
 ================================
 ```Refer to Raid Index in Pinned Messages for the raid Rules.```
 ================================
-To sign for this run MENTION <@123> I'm in for Monday evening!
+To sign for this run MENTION <@12345678> I'm in for Monday evening!
 ```

@@ -11,6 +11,30 @@ defmodule SeedParserTokenizerTest do
     assert Tokenizer.decode(text) == tokens
   end
 
+  test "parse valid user" do
+    text = "<@123>"
+    tokens = [{:user, 123}]
+    assert Tokenizer.decode(text) == tokens
+  end
+
+  test "parse valid nick user" do
+    text = "<@!123>"
+    tokens = [{:user, 123}]
+    assert Tokenizer.decode(text) == tokens
+  end
+
+  test "parse valid nick followed by number" do
+    text = "<@!123> 42"
+    tokens = [{:number, 42}, {:user, 123}]
+    assert Tokenizer.decode(text) == tokens
+  end
+
+  test "parse garbage user" do
+    text = "<@!123a 1"
+    tokens = [{:number, 1}]
+    assert Tokenizer.decode(text) == tokens
+  end
+
   test "mix type" do
     text = "100 mix"
     tokens = [{:type, :mix}, {:number, 100}]

@@ -8,6 +8,7 @@ defmodule SeedParser.Tokenizer do
   @number 1
   @punct 2
   @text 3
+  @user 4
 
   @digits '01234556789'
   @spaces '\s\t<>[]()!*'
@@ -15,6 +16,14 @@ defmodule SeedParser.Tokenizer do
 
   def decode(line) do
     node(line, line, 0, [])
+  end
+
+  defp node(<<?<, ?@, ?!, rest::bits>>, original, skip, stack) do
+    number(rest, original, skip + 3, [@user | stack], 0)
+  end
+
+  defp node(<<?<, ?@, rest::bits>>, original, skip, stack) do
+    number(rest, original, skip + 2, [@user | stack], 0)
   end
 
   defp node(<<byte, rest::bits>>, original, skip, stack) when byte in @spaces do
@@ -101,11 +110,21 @@ defmodule SeedParser.Tokenizer do
     end
   end
 
+  defp user_value(<<?>, rest::bits>>, original, skip, stack, value) do
+    stack = [{:user, value} | stack]
+    node(rest, original, skip + 1, stack)
+  end
+
+  defp user_value(rest, original, skip, stack, _value) do
+    node(rest, original, skip, stack)
+  end
+
   defp number_value(rest, original, skip, stack, value) do
     stack = [{:number, value} | stack]
     node(rest, original, skip, stack)
   end
 
+  @compile {:inline, continue: 5}
   defp continue(rest, original, skip, stack, value) do
     case stack do
       [@number | stack] ->
@@ -113,6 +132,9 @@ defmodule SeedParser.Tokenizer do
 
       [@text | stack] ->
         text_value(rest, original, skip, stack, value)
+
+      [@user | stack] ->
+        user_value(rest, original, skip, stack, value)
     end
   end
 end

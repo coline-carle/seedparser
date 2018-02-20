@@ -46,7 +46,7 @@ defmodule SeedParser.Decoder do
          |> Map.to_list()
          |> has_all_elements? do
       true ->
-        {:ok, struct(%SeedParser{}, metadata)}
+        {:ok, struct(%SeedParser{}, metadata |> users_set_to_list())}
 
       false ->
         missing_error(@elements, metadata)
@@ -78,6 +78,12 @@ defmodule SeedParser.Decoder do
 
   defp decode_tokens([{:token, :events}, {:token, :upcoming} | _], _stack, _options) do
     [error: :upcoming]
+  end
+
+  defp decode_tokens([{:user, discord_id} | rest], stack, options) do
+    stack = stack |> add_user(discord_id)
+
+    decode_tokens(rest, stack, options)
   end
 
   defp decode_tokens([{:type, type}, {:number, seeds} | rest], stack, options)
@@ -173,6 +179,22 @@ defmodule SeedParser.Decoder do
 
   defp decode_tokens([_any | tokens], stack, options) do
     decode_tokens(tokens, stack, options)
+  end
+
+  defp add_user(stack, discord_id) do
+    user_set = stack |> Keyword.get(:users, MapSet.new())
+    user_set = user_set |> MapSet.put(discord_id)
+    stack |> Keyword.put(:users, user_set)
+  end
+
+  defp users_set_to_list(stack) do
+    case stack |> Map.fetch(:users) do
+      {:ok, user_set} ->
+        stack |> Map.put(:users, user_set |> MapSet.to_list())
+
+      _ ->
+        stack
+    end
   end
 
   defp insert_if_valid_time(stack, hour, minute) do
