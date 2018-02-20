@@ -13,6 +13,8 @@ defmodule SeedParser.Decoder do
 
   @seed_range 20..400
 
+  @participants_range 1..15
+
   def decode(data, options \\ []) do
     defaults = [today: Date.utc_today(), date: :eu]
 
@@ -92,6 +94,19 @@ defmodule SeedParser.Decoder do
       stack
       |> Keyword.put(:type, type)
       |> Keyword.put(:seeds, seeds)
+
+    decode_tokens(rest, stack, options)
+  end
+
+  defp decode_tokens(
+         [{:number, 10}, {:punct, "/"}, {:number, participants} | rest],
+         stack,
+         options
+       )
+       when participants in @participants_range do
+    stack =
+      stack
+      |> Keyword.put(:participants, participants)
 
     decode_tokens(rest, stack, options)
   end

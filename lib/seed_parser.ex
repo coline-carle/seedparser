@@ -10,8 +10,9 @@ defmodule SeedParser do
           time: Time.t(),
           seeds: integer,
           type: type,
-          users: list(integer)
+          users: list(integer),
+          participants: integer
         }
 
-  defstruct [:date, :time, :seeds, :type, :users]
+  defstruct [:date, :time, :seeds, :type, :users, :participants]
 end

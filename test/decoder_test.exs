@@ -12,7 +12,8 @@ defmodule SeedParserDecoderTest do
       date: ~D[2018-01-01],
       time: ~T[22:00:00],
       type: :mix,
-      seeds: 60
+      seeds: 60,
+      participants: 6
     }
 
     today = ~D[2018-01-01]
@@ -38,7 +39,8 @@ defmodule SeedParserDecoderTest do
       time: ~T[21:00:00],
       seeds: 100,
       type: :mix,
-      users: [123, 123_456]
+      users: [123, 123_456],
+      participants: 10
     }
 
     today = ~D[2018-01-01]
@@ -54,7 +56,8 @@ defmodule SeedParserDecoderTest do
       time: ~T[21:00:00],
       seeds: 100,
       type: :mix,
-      users: [12_345_678]
+      users: [12_345_678],
+      participants: nil
     }
 
     today = ~D[2018-01-01]
