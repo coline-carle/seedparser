@@ -3,6 +3,7 @@ defmodule SeedParser.Normalizer do
 
   @tokens %{
     "upcoming" => {:token, :upcoming},
+    "scheduled" => {:token, :upcoming},
     "events" => {:token, :events},
     "raids" => {:token, :events},
     "est" => {:timezone, :est},
