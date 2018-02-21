@@ -208,7 +208,7 @@ defmodule SeedParser.Decoder do
         stack |> Map.put(:users, user_set |> MapSet.to_list())
 
       _ ->
-        stack
+        stack |> Map.put(:users, [])
     end
   end
 

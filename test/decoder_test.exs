@@ -39,7 +39,8 @@ defmodule SeedParserDecoderTest do
       time: ~T[22:00:00],
       type: :mix,
       seeds: 60,
-      participants: 6
+      participants: 6,
+      users: []
     }
 
     today = ~D[2018-01-01]
@@ -98,7 +99,8 @@ defmodule SeedParserDecoderTest do
       date: ~D[2018-02-11],
       time: ~T[23:00:00],
       seeds: 30,
-      type: :foxflower
+      type: :foxflower,
+      users: []
     }
 
     today = ~D[2018-02-11]
@@ -119,7 +121,8 @@ defmodule SeedParserDecoderTest do
       date: ~D[2018-02-11],
       time: ~T[19:00:00],
       seeds: 200,
-      type: :mix
+      type: :mix,
+      users: []
     }
 
     today = ~D[2018-02-11]
@@ -133,7 +136,8 @@ defmodule SeedParserDecoderTest do
       date: ~D[2018-02-13],
       time: ~T[19:00:00],
       seeds: 100,
-      type: :starlight_rose
+      type: :starlight_rose,
+      users: []
     }
 
     today = ~D[2018-02-11]
@@ -147,7 +151,8 @@ defmodule SeedParserDecoderTest do
       date: ~D[2018-02-11],
       time: ~T[19:00:00],
       seeds: 200,
-      type: :mix
+      type: :mix,
+      users: []
     }
 
     today = ~D[2018-02-11]
