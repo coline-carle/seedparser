@@ -4,6 +4,8 @@ defmodule SeedParser do
           :starlight_rose
           | :mix
           | :foxflower
+          | :fjarnskaggl
+          | :dreamleaf
 
   @type t :: %__MODULE__{
           date: Date.t(),
