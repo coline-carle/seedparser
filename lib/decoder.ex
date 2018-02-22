@@ -25,8 +25,8 @@ defmodule SeedParser.Decoder do
 
     metadata =
       data
-      |> String.split("\n")
-      |> decode_line([], options)
+      |> Tokenizer.decode()
+      |> decode_tokens([roster: MapSet.new()], options)
       |> Enum.into(%{})
 
     case metadata do
@@ -48,7 +48,7 @@ defmodule SeedParser.Decoder do
          |> Map.to_list()
          |> has_all_elements? do
       true ->
-        {:ok, struct(%SeedParser{}, metadata |> users_set_to_list())}
+        {:ok, struct(%SeedParser{}, metadata |> sets_to_list())}
 
       false ->
         missing_error(@elements, metadata)
@@ -63,17 +63,6 @@ defmodule SeedParser.Decoder do
       false ->
         {:error, "could not parse #{element}"}
     end
-  end
-
-  defp decode_line([], stack, _), do: stack
-
-  defp decode_line([line | lines], stack, options) do
-    stack =
-      line
-      |> Tokenizer.decode()
-      |> decode_tokens(stack, options)
-
-    decode_line(lines, stack, options)
   end
 
   defp decode_tokens([], stack, _), do: stack
@@ -192,24 +181,70 @@ defmodule SeedParser.Decoder do
     continue(rest, stack, options)
   end
 
+  defp decode_tokens([{:token, :by}, {:token, :stand} | rest], stack, options) do
+    stack = switch_roster_and_backup(stack)
+    continue(rest, stack, options)
+  end
+
+  defp decode_tokens([{:token, :backup} | rest], stack, options) do
+    stack = switch_roster_and_backup(stack)
+    continue(rest, stack, options)
+  end
+
   defp decode_tokens([_any | tokens], stack, options) do
     decode_tokens(tokens, stack, options)
   end
 
-  defp add_user(stack, discord_id) do
-    user_set = stack |> Keyword.get(:users, MapSet.new())
-    user_set = user_set |> MapSet.put(discord_id)
-    stack |> Keyword.put(:users, user_set)
+  defp switch_roster_and_backup(stack) do
+    roster = stack |> Keyword.fetch!(:roster)
+
+    stack
+    |> Keyword.put(:backup, roster)
+    |> Keyword.put(:roster, MapSet.new())
   end
 
-  defp users_set_to_list(stack) do
-    case stack |> Map.fetch(:users) do
-      {:ok, user_set} ->
-        stack |> Map.put(:users, user_set |> MapSet.to_list())
+  defp add_user(stack, discord_id) do
+    roster_set = stack |> Keyword.fetch!(:roster)
 
-      _ ->
-        stack |> Map.put(:users, [])
+    case stack |> Keyword.fetch(:backup) do
+      {:ok, backup_set} ->
+        case backup_set |> MapSet.member?(discord_id) do
+          true ->
+            stack
+
+          false ->
+            roster_set = roster_set |> MapSet.put(discord_id)
+
+            stack
+            |> Keyword.put(:roster, roster_set)
+        end
+
+      :error ->
+        roster_set =
+          roster_set
+          |> MapSet.put(discord_id)
+
+        stack
+        |> Keyword.put(:roster, roster_set)
     end
+  end
+
+  defp set_to_list(stack, key) do
+    {key,
+     stack
+     |> Map.fetch!(key)
+     |> MapSet.to_list()}
+  end
+
+  defp sets_to_list(stack) do
+    stack = stack |> Map.put_new(:backup, MapSet.new())
+
+    set_map =
+      [:backup, :roster]
+      |> Enum.map(&set_to_list(stack, &1))
+      |> Enum.into(%{})
+
+    Map.merge(stack, set_map)
   end
 
   defp insert_if_valid_time(stack, hour, minute) do

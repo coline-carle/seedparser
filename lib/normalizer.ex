@@ -2,6 +2,12 @@ defmodule SeedParser.Normalizer do
   @moduledoc false
 
   @tokens %{
+    "backup" => {:token, :backup},
+    "backups" => {:token, :backup},
+    "standby" => {:token, :backup},
+    "stand-by" => {:token, :backup},
+    "stand" => {:token, :stand},
+    "by" => {:token, :by},
     "upcoming" => {:token, :upcoming},
     "scheduled" => {:token, :upcoming},
     "events" => {:token, :events},

@@ -12,7 +12,7 @@ defmodule SeedParser.Tokenizer do
 
   @digits '01234556789'
   @spaces '\s\t<>[]()!*'
-  @punct './:,'
+  @punct './:,\n'
 
   def decode(line) do
     node(line, line, 0, [])

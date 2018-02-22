@@ -14,7 +14,7 @@ defmodule SeedParserDecoderTest do
       type: :mix,
       seeds: 100,
       participants: nil,
-      users: [
+      roster: [
         113_009_099_544_760_320,
         143_129_714_939_133_952,
         168_225_928_269_266_945,
@@ -22,9 +22,9 @@ defmodule SeedParserDecoderTest do
         217_397_918_045_306_880,
         247_516_165_612_503_040,
         302_264_833_464_860_682,
-        303_693_556_093_288_459,
-        355_118_113_748_156_416
-      ]
+        303_693_556_093_288_459
+      ],
+      backup: [355_118_113_748_156_416]
     }
 
     today = ~D[2018-02-10]
@@ -40,7 +40,8 @@ defmodule SeedParserDecoderTest do
       type: :mix,
       seeds: 60,
       participants: 6,
-      users: []
+      roster: [],
+      backup: []
     }
 
     today = ~D[2018-01-01]
@@ -66,7 +67,8 @@ defmodule SeedParserDecoderTest do
       time: ~T[21:00:00],
       seeds: 100,
       type: :mix,
-      users: [123, 123_456],
+      roster: [123, 1_234_567],
+      backup: [123_456],
       participants: 10
     }
 
@@ -83,7 +85,8 @@ defmodule SeedParserDecoderTest do
       time: ~T[21:00:00],
       seeds: 100,
       type: :mix,
-      users: [12_345_678],
+      roster: [12_345_678],
+      backup: [],
       participants: nil
     }
 
@@ -100,7 +103,8 @@ defmodule SeedParserDecoderTest do
       time: ~T[23:00:00],
       seeds: 30,
       type: :foxflower,
-      users: []
+      roster: [],
+      backup: []
     }
 
     today = ~D[2018-02-11]
@@ -122,7 +126,8 @@ defmodule SeedParserDecoderTest do
       time: ~T[19:00:00],
       seeds: 200,
       type: :mix,
-      users: []
+      roster: [],
+      backup: []
     }
 
     today = ~D[2018-02-11]
@@ -137,7 +142,8 @@ defmodule SeedParserDecoderTest do
       time: ~T[19:00:00],
       seeds: 100,
       type: :starlight_rose,
-      users: []
+      roster: [],
+      backup: []
     }
 
     today = ~D[2018-02-11]
@@ -152,7 +158,8 @@ defmodule SeedParserDecoderTest do
       time: ~T[19:00:00],
       seeds: 200,
       type: :mix,
-      users: []
+      roster: [],
+      backup: []
     }
 
     today = ~D[2018-02-11]

@@ -23,6 +23,12 @@ defmodule SeedParserTokenizerTest do
     assert Tokenizer.decode(text) == tokens
   end
 
+  test "backup test" do
+    text = "Stand by:  <@355118113748156416>"
+    tokens = [{:user, 355_118_113_748_156_416}, {:punct, ":"}, {:token, :by}, {:token, :stand}]
+    assert Tokenizer.decode(text) == tokens
+  end
+
   test "parse valid nick followed by number" do
     text = "<@!123> 42"
     tokens = [{:number, 42}, {:user, 123}]
