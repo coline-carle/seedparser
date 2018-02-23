@@ -59,6 +59,35 @@ defmodule SeedParserDecoderTest do
     assert Decoder.format(text) == output
   end
 
+  test "without backup" do
+    {:ok, text} = File.read("./test/fixtures/without_backup.md")
+
+    metadata = %SeedParser{
+      date: ~D[2018-02-23],
+      time: ~T[21:00:00],
+      seeds: 100,
+      type: :starlight_rose,
+      roster: [
+        169_944_372_391_968_768,
+        176_764_824_980_553_729,
+        184_404_633_836_322_817,
+        209_515_182_890_811_392,
+        216_922_367_899_729_921,
+        221_339_571_223_396_352,
+        225_316_622_653_587_467,
+        341_591_377_655_758_868,
+        387_282_925_248_577_537,
+        392_418_877_918_937_100
+      ],
+      backup: [],
+      participants: 10
+    }
+
+    today = ~D[2018-02-20]
+
+    assert Decoder.decode(text, today: today) == {:ok, metadata}
+  end
+
   test "sholenar template" do
     {:ok, text} = File.read("./test/fixtures/sholenar.md")
 
