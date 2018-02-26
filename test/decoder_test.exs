@@ -5,6 +5,24 @@ defmodule SeedParserDecoderTest do
   doctest SeedParser.Decoder
   alias SeedParser.Decoder
 
+  test "417401865958064138" do
+    {:ok, text} = File.read("./test/fixtures/417401865958064138.md")
+
+    metadata = %SeedParser{
+      date: ~D[2018-02-26],
+      time: ~T[20:00:00],
+      type: :mix,
+      seeds: 100,
+      participants: nil,
+      roster: [],
+      backup: []
+    }
+
+    today = ~D[2018-02-20]
+
+    assert Decoder.decode(text, today: today) == {:ok, metadata}
+  end
+
   test "template with channel" do
     {:ok, text} = File.read("./test/fixtures/template_with_channel.md")
 
@@ -27,7 +45,7 @@ defmodule SeedParserDecoderTest do
       backup: [355_118_113_748_156_416]
     }
 
-    today = ~D[2018-02-10]
+    today = ~D[2018-02-20]
     assert Decoder.decode(text, today: today) == {:ok, metadata}
   end
 

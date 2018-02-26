@@ -143,9 +143,23 @@ defmodule SeedParser.Decoder do
   defp decode_tokens(
          [
            {:number, month},
-           {:punct, "."},
+           {:punct, _},
            {:number, day},
            {:punct, ","},
+           {:weekday, _weekday} | rest
+         ],
+         stack,
+         %{today: today} = options
+       ) do
+    stack = stack |> insert_if_valid_date(today.year, month, day, options)
+    continue(rest, stack, options)
+  end
+
+  defp decode_tokens(
+         [
+           {:number, month},
+           {:punct, _},
+           {:number, day},
            {:weekday, _weekday} | rest
          ],
          stack,
