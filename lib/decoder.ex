@@ -340,12 +340,6 @@ defmodule SeedParser.Decoder do
   end
 
   defp continue(rest, stack, options) do
-    case stack |> has_all_elements? do
-      true ->
-        stack
-
-      false ->
-        decode_tokens(rest, stack, options)
-    end
+    decode_tokens(rest, stack, options)
   end
 end

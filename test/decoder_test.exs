@@ -5,6 +5,21 @@ defmodule SeedParserDecoderTest do
   doctest SeedParser.Decoder
   alias SeedParser.Decoder
 
+  test "upcoming raids file" do
+    {:ok, text} = File.read("./test/fixtures/upcoming_raids.md")
+    today = ~D[2018-02-20]
+
+    assert Decoder.decode(text, today: today) == {:error, :upcoming}
+  end
+
+  test "upcoming events" do
+    text = "**_Upcoming raids!_**"
+
+    today = ~D[2018-02-20]
+
+    assert Decoder.decode(text, today: today) == {:error, :upcoming}
+  end
+
   test "pm date" do
     text = "<200 mixed seed raid> <Thursday, March 1st> <10pm EST>"
 
