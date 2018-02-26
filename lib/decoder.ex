@@ -170,6 +170,30 @@ defmodule SeedParser.Decoder do
   end
 
   defp decode_tokens(
+         [
+           {:timezone, _any},
+           {:day_period, day_period},
+           {:number, minute},
+           {:punct, ":"},
+           {:number, hour} | rest
+         ],
+         stack,
+         options
+       ) do
+    hour =
+      case day_period do
+        :am ->
+          hour
+
+        :pm ->
+          hour + 12
+      end
+
+    stack = stack |> insert_if_valid_time(hour, minute)
+    continue(rest, stack, options)
+  end
+
+  defp decode_tokens(
          [{:timezone, _any}, {:number, minute}, {:punct, ":"}, {:number, hour} | rest],
          stack,
          options
@@ -187,6 +211,20 @@ defmodule SeedParser.Decoder do
     hour = div(combined, 100)
     minute = rem(combined, 100)
     stack = stack |> insert_if_valid_time(hour, minute)
+    continue(rest, stack, options)
+  end
+
+  defp decode_tokens([{:day_period, day_period}, {:number, hour} | rest], stack, options) do
+    hour =
+      case day_period do
+        :am ->
+          hour
+
+        :pm ->
+          hour + 12
+      end
+
+    stack = stack |> insert_if_valid_time(hour, 00)
     continue(rest, stack, options)
   end
 

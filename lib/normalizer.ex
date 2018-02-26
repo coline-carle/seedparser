@@ -2,6 +2,8 @@ defmodule SeedParser.Normalizer do
   @moduledoc false
 
   @tokens %{
+    "am" => {:day_period, :am},
+    "pm" => {:day_period, :pm},
     "backup" => {:token, :backup},
     "backups" => {:token, :backup},
     "standby" => {:token, :backup},

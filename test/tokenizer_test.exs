@@ -7,7 +7,7 @@ defmodule SeedParserTokenizerTest do
 
   test "parse garbage" do
     text = "a dab23"
-    tokens = []
+    tokens = [{:text, "dab23"}, {:text, "a"}]
     assert Tokenizer.decode(text) == tokens
   end
 
@@ -37,7 +37,7 @@ defmodule SeedParserTokenizerTest do
 
   test "parse garbage user" do
     text = "<@!123a 1"
-    tokens = [{:number, 1}]
+    tokens = [{:number, 1}, {:text, "a"}]
     assert Tokenizer.decode(text) == tokens
   end
 
@@ -49,7 +49,7 @@ defmodule SeedParserTokenizerTest do
 
   test "30 foxflower" do
     text = "```ini [30 Foxflower]``````markdown"
-    tokens = [{:type, :foxflower}, {:number, 30}]
+    tokens = [{:text, "``````markdown"}, {:type, :foxflower}, {:number, 30}, {:text, "```ini"}]
     assert Tokenizer.decode(text) == tokens
   end
 
@@ -67,11 +67,31 @@ defmodule SeedParserTokenizerTest do
 
   test "date-eu-alliance-2" do
     text = "[DATE:](Thursday, Feb 8th)"
-    tokens = [{:number, 08}, {:month, 02}, {:punct, ","}, {:weekday, 3}, {:punct, ":"}]
+
+    tokens = [
+      {:text, "th"},
+      {:number, 08},
+      {:month, 02},
+      {:punct, ","},
+      {:weekday, 3},
+      {:punct, ":"},
+      {:text, "DATE"}
+    ]
+
     assert Tokenizer.decode(text) == tokens
 
     text = "[[DATE:](Monday, January 1st)"
-    tokens = [{:number, 01}, {:month, 01}, {:punct, ","}, {:weekday, 0}, {:punct, ":"}]
+
+    tokens = [
+      {:text, "st"},
+      {:number, 01},
+      {:month, 01},
+      {:punct, ","},
+      {:weekday, 0},
+      {:punct, ":"},
+      {:text, "DATE"}
+    ]
+
     assert Tokenizer.decode(text) == tokens
   end
 
@@ -84,7 +104,8 @@ defmodule SeedParserTokenizerTest do
       {:number, 08},
       {:punct, ","},
       {:weekday, 3},
-      {:punct, ":"}
+      {:punct, ":"},
+      {:text, "DATE"}
     ]
 
     assert Tokenizer.decode(text) == tokens
@@ -95,7 +116,9 @@ defmodule SeedParserTokenizerTest do
 
     tokens = [
       {:token, :events},
-      {:token, :upcoming}
+      {:token, :upcoming},
+      {:text, "of"},
+      {:text, "List"}
     ]
 
     assert Tokenizer.decode(text) == tokens
@@ -122,7 +145,8 @@ defmodule SeedParserTokenizerTest do
       {:punct, "/"},
       {:number, 22},
       {:weekday, 0},
-      {:punct, ":"}
+      {:punct, ":"},
+      {:text, "DATE"}
     ]
 
     assert Tokenizer.decode(text) == tokens
