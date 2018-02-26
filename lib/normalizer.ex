@@ -67,6 +67,6 @@ defmodule SeedParser.Normalizer do
   def normalize(value) do
     dvalue = value |> String.downcase()
 
-    @tokens |> Map.get(dvalue, :invalid)
+    @tokens |> Map.get(dvalue, :text)
   end
 end

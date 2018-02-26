@@ -5,6 +5,24 @@ defmodule SeedParserDecoderTest do
   doctest SeedParser.Decoder
   alias SeedParser.Decoder
 
+  test "100mix" do
+    {:ok, text} = File.read("./test/fixtures/100mix.md")
+
+    metadata = %SeedParser{
+      date: ~D[2018-03-02],
+      time: ~T[22:00:00],
+      type: :mix,
+      seeds: 100,
+      participants: nil,
+      roster: [],
+      backup: []
+    }
+
+    today = ~D[2018-02-20]
+
+    assert Decoder.decode(text, today: today) == {:ok, metadata}
+  end
+
   test "417401865958064138" do
     {:ok, text} = File.read("./test/fixtures/417401865958064138.md")
 

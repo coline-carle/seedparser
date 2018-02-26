@@ -101,7 +101,8 @@ defmodule SeedParser.Tokenizer do
 
   defp text_value(rest, original, skip, stack, value) do
     case Normalizer.normalize(value) do
-      :invalid ->
+      :text ->
+        stack = [{:text, value} | stack]
         node(rest, original, skip, stack)
 
       {token, value} ->
