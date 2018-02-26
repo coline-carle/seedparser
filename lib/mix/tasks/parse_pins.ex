@@ -3,7 +3,6 @@ defmodule Mix.Tasks.Discord.ParsePins do
 
   alias Nostrum.Api
   require Logger
-  alias Poison.Encoder
   alias SeedParser.Decoder
 
   def parse_pin(message) do

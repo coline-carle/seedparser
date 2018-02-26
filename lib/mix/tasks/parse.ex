@@ -4,7 +4,6 @@ defmodule Mix.Tasks.Template.Parse do
   use Mix.Task
 
   alias SeedParser.Decoder
-  alias Poison.Encoder
 
   def run(filename) do
     {:ok, template} = File.read(filename)

@@ -23,7 +23,6 @@ defmodule Seedparser.MixProject do
   defp deps do
     [
       {:credo, "~> 0.9.0-rc1", only: [:dev, :test], runtime: false},
-      {:poison, "~> 3.0"},
       {:nostrum, git: "https://github.com/Kraigie/nostrum.git", only: [:dev, :test]},
       {:gun,
        git: "https://github.com/ninenines/gun.git",
