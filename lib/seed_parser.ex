@@ -6,6 +6,7 @@ defmodule SeedParser do
           | :foxflower
           | :fjarnskaggl
           | :dreamleaf
+          | :aethril
 
   @type t :: %__MODULE__{
           date: Date.t(),

@@ -16,6 +16,8 @@ defmodule SeedParser.Normalizer do
     "raids" => {:token, :events},
     "est" => {:timezone, :est},
     "cet" => {:timezone, :cet},
+    "at" => {:type, :aethril},
+    "aethril" => {:type, :aethril},
     "ff" => {:type, :foxflower},
     "fox" => {:type, :foxflower},
     "foxflower" => {:type, :foxflower},
