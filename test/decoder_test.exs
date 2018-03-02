@@ -42,8 +42,8 @@ defmodule SeedParserDecoderTest do
     text = "<Thursday, March 1st> <10pm EST>"
 
     error = %{
-      missing: [:type, :seeds],
-      message: "template is missing the following elements : type, seeds"
+      missing: [:format],
+      message: "template is missing the following elements : format"
     }
 
     today = ~D[2018-02-20]

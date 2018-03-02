@@ -57,7 +57,23 @@ defmodule SeedParser.Decoder do
 
   defp missing_error(elements, metadata) do
     missing = missing_elements(elements, metadata, [])
+    missing = missing |> replace_type_error
     {:error, %{missing: missing, message: missing_message(missing)}}
+  end
+
+  defp replace_type_error(missing) do
+    case missing |> Enum.member?(:type) do
+      true ->
+        [
+          :format
+          | missing
+            |> List.delete(:seeds)
+            |> List.delete(:type)
+        ]
+
+      false ->
+        missing
+    end
   end
 
   defp missing_message(missing) do
