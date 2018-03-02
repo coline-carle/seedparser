@@ -55,13 +55,20 @@ defmodule SeedParser.Decoder do
     end
   end
 
-  defp missing_error([element | rest], metadata) do
+  defp missing_error(elements, metadata) do
+    missing = missing_elements(elements, metadata, [])
+    {:error, %{missing: missing}}
+  end
+
+  defp missing_elements([], _metadata, missing), do: missing
+
+  defp missing_elements([element | rest], metadata, missing) do
     case metadata |> Map.has_key?(element) do
       true ->
-        missing_error(rest, metadata)
+        missing_elements(rest, metadata, missing)
 
       false ->
-        {:error, "could not parse #{element}"}
+        missing_elements(rest, metadata, [element | missing])
     end
   end
 

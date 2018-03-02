@@ -38,6 +38,36 @@ defmodule SeedParserDecoderTest do
     assert Decoder.decode(text, today: today) == {:ok, metadata}
   end
 
+  test "message without format" do
+    text = "<Thursday, March 1st> <10pm EST>"
+
+    error = %{missing: [:type, :seeds]}
+
+    today = ~D[2018-02-20]
+
+    assert Decoder.decode(text, today: today) == {:error, error}
+  end
+
+  test "message without time" do
+    text = "<200 mixed seed raid><Thursday, March 1st>"
+
+    error = %{missing: [:time]}
+
+    today = ~D[2018-02-20]
+
+    assert Decoder.decode(text, today: today) == {:error, error}
+  end
+
+  test "message without date" do
+    text = "<200 mixed seed raid> <10pm EST>"
+
+    error = %{missing: [:date]}
+
+    today = ~D[2018-02-20]
+
+    assert Decoder.decode(text, today: today) == {:error, error}
+  end
+
   test "pm date" do
     text = "<200 mixed seed raid> <Thursday, March 1st> <10pm EST>"
 
