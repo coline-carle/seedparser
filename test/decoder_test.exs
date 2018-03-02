@@ -41,7 +41,10 @@ defmodule SeedParserDecoderTest do
   test "message without format" do
     text = "<Thursday, March 1st> <10pm EST>"
 
-    error = %{missing: [:type, :seeds]}
+    error = %{
+      missing: [:type, :seeds],
+      message: "template is missing the following elements : type, seeds"
+    }
 
     today = ~D[2018-02-20]
 
@@ -51,7 +54,7 @@ defmodule SeedParserDecoderTest do
   test "message without time" do
     text = "<200 mixed seed raid><Thursday, March 1st>"
 
-    error = %{missing: [:time]}
+    error = %{missing: [:time], message: "template is missing the following elements : time"}
 
     today = ~D[2018-02-20]
 
@@ -61,7 +64,7 @@ defmodule SeedParserDecoderTest do
   test "message without date" do
     text = "<200 mixed seed raid> <10pm EST>"
 
-    error = %{missing: [:date]}
+    error = %{missing: [:date], message: "template is missing the following elements : date"}
 
     today = ~D[2018-02-20]
 

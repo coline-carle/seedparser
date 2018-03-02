@@ -57,7 +57,12 @@ defmodule SeedParser.Decoder do
 
   defp missing_error(elements, metadata) do
     missing = missing_elements(elements, metadata, [])
-    {:error, %{missing: missing}}
+    {:error, %{missing: missing, message: missing_message(missing)}}
+  end
+
+  defp missing_message(missing) do
+    missing_list = missing |> Enum.join(", ")
+    "template is missing the following elements : #{missing_list}"
   end
 
   defp missing_elements([], _metadata, missing), do: missing
