@@ -71,6 +71,23 @@ defmodule SeedParserDecoderTest do
     assert Decoder.decode(text, today: today) == {:error, error}
   end
 
+  test "new date format" do
+    text = "[100 MIX Seed Raid] • Date: 04 March 2018• Time: 19:00 CET"
+
+    metadata = %SeedParser{
+      date: ~D[2018-03-04],
+      time: ~T[19:00:00],
+      type: :mix,
+      seeds: 100,
+      participants: nil,
+      roster: [],
+      backup: []
+    }
+
+    today = ~D[2018-02-20]
+    assert Decoder.decode(text, today: today) == {:ok, metadata}
+  end
+
   test "pm date" do
     text = "<200 mixed seed raid> <Thursday, March 1st> <10pm EST>"
 
