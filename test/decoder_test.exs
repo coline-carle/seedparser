@@ -159,6 +159,34 @@ defmodule SeedParserDecoderTest do
     assert Decoder.decode(text, today: today) == {:ok, metadata}
   end
 
+  test "thal_last" do
+    {:ok, text} = File.read("./test/fixtures/thal_last.md")
+
+    metadata = %SeedParser{
+      date: ~D[2018-03-04],
+      time: ~T[22:00:00],
+      type: :starlight_rose,
+      seeds: 100,
+      participants: 10,
+      roster: [
+        128_250_420_521_861_120,
+        198_956_678_777_929_728,
+        211_022_778_588_069_888,
+        215_480_785_711_398_912,
+        242_037_329_508_827_136,
+        277_963_213_847_527_425,
+        280_075_520_748_552_192,
+        289_883_408_723_738_625,
+        341_295_822_685_863_936,
+        375_786_786_867_380_224
+      ],
+      backup: [212_898_570_263_724_032]
+    }
+
+    today = ~D[2018-02-20]
+    assert Decoder.decode(text, today: today) == {:ok, metadata}
+  end
+
   test "template with channel" do
     {:ok, text} = File.read("./test/fixtures/template_with_channel.md")
 
