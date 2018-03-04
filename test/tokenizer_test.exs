@@ -5,6 +5,12 @@ defmodule SeedParserTokenizerTest do
   doctest SeedParser.Tokenizer
   alias SeedParser.Tokenizer
 
+  test "misplaced formating" do
+    text = "1145 EST```"
+    tokens = [{:timezone, :est}, {:number, 1145}]
+    assert Tokenizer.decode(text) == tokens
+  end
+
   test "parse garbage" do
     text = "a dab23"
     tokens = [{:text, "dab23"}, {:text, "a"}]
@@ -49,7 +55,7 @@ defmodule SeedParserTokenizerTest do
 
   test "30 foxflower" do
     text = "```ini [30 Foxflower]``````markdown"
-    tokens = [{:text, "``````markdown"}, {:type, :foxflower}, {:number, 30}, {:text, "```ini"}]
+    tokens = [{:text, "markdown"}, {:type, :foxflower}, {:number, 30}, {:text, "ini"}]
     assert Tokenizer.decode(text) == tokens
   end
 
