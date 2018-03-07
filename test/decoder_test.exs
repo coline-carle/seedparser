@@ -231,6 +231,22 @@ defmodule SeedParserDecoderTest do
     assert Decoder.decode(text, today: today) == {:ok, metadata}
   end
 
+  test "decode us time + am" do
+    text = "+ 100 mixed + Monday March 4th @ 1000 AM EST"
+
+    metadata = %SeedParser{
+      date: ~D[2018-03-04],
+      time: ~T[10:00:00],
+      type: :mix,
+      seeds: 100,
+      roster: [],
+      backup: []
+    }
+
+    today = ~D[2018-03-01]
+    assert Decoder.decode(text, today: today) == {:ok, metadata}
+  end
+
   test "format" do
     text = "text ```md text again ```"
     output = "text\n```md\ntext again\n```\n"
