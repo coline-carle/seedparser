@@ -249,7 +249,7 @@ defmodule SeedParser.Decoder do
   end
 
   defp decode_tokens(
-         [{:timezone, :est}, {:day_period, :am}, {:number, combined} | rest],
+         [{:timezone, :na}, {:day_period, :am}, {:number, combined} | rest],
          stack,
          options
        ) do
@@ -259,7 +259,7 @@ defmodule SeedParser.Decoder do
     continue(rest, stack, options)
   end
 
-  defp decode_tokens([{:timezone, :est}, {:number, combined} | rest], stack, options) do
+  defp decode_tokens([{:timezone, :na}, {:number, combined} | rest], stack, options) do
     hour = div(combined, 100)
     minute = rem(combined, 100)
     stack = stack |> insert_if_valid_time(hour, minute)

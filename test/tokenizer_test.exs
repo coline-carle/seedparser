@@ -7,7 +7,7 @@ defmodule SeedParserTokenizerTest do
 
   test "misplaced formating" do
     text = "1145 EST```"
-    tokens = [{:timezone, :est}, {:number, 1145}]
+    tokens = [{:timezone, :na}, {:number, 1145}]
     assert Tokenizer.decode(text) == tokens
   end
 
