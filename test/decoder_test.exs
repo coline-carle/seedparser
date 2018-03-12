@@ -20,6 +20,25 @@ defmodule SeedParserDecoderTest do
     assert Decoder.decode(text, today: today) == {:error, :upcoming}
   end
 
+  test "fjarn bug" do
+    text =
+      "100 FJARN>\n\nDATE: Thursday, March 15th\nTIME: 22:00\nREQ: AT 3 & FW 3\nSEEDS: 100 Fjarnskaggl seeds"
+
+    today = ~D[2018-03-10]
+
+    metadata = %SeedParser{
+      date: ~D[2018-03-15],
+      time: ~T[22:00:00],
+      type: :fjarnskaggl,
+      seeds: 100,
+      participants: nil,
+      roster: [],
+      backup: []
+    }
+
+    assert Decoder.decode(text, today: today) == {:ok, metadata}
+  end
+
   test "aethril" do
     text = "<200 aethril seed raid> <Thursday, March 1st> <10pm EST>"
 
