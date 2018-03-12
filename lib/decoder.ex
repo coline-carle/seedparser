@@ -11,7 +11,7 @@ defmodule SeedParser.Decoder do
           | :foxflower
   @type seeds :: integer
 
-  @seed_range 20..400
+  @seed_range 20..500
 
   @participants_range 1..15
 
